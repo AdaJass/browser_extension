@@ -1,4 +1,4 @@
-import cunstomer
+from cunstomer import *
 
 operation={
     'history': set_history,
@@ -17,7 +17,7 @@ message={
 }
 """
 
-def seter(message):    
+def task_center(ws, message):    
     operation.get(message['msgid'])(message)
     pass
 

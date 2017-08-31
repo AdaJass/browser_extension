@@ -2,10 +2,12 @@
 import uuid
 import mongo as db
 
-__description_attrib=list(db.descriptAttr.find({}))
-description_attrib={}
-for it in __description_attrib:
-    description_attrib[it['_id']]=it.pop('_id')
+__Description_Attrib=list(db.descriptAttr.find({}))
+Description_Attrib={}
+for it in __Description_Attrib:
+    Description_Attrib[it['_id']]=it.pop('_id')
+
+All_Customer = dict()
 
 class Customer:
     def __init__(self, customerid, currentpage):
@@ -48,12 +50,12 @@ class Customer:
         pass
 
     def get_history(self, date):
-        his=db.history.find({'customerId':self.customerid, 'date':{'$gte':date}).sort('date')
+        his=db.history.find({'customerId':self.customerid, 'date':{'$gte':date}}).sort('date')
         his=list(his)
         return his
 
     def get_profile(self, start_date, end_date):
-        pro=db.profile.find({'customerId':self.customerid, 'date':{'$gte':date, '$lte': end_date}).sort('date')
+        pro=db.profile.find({'customerId':self.customerid, 'date':{'$gte':date, '$lte': end_date}}).sort('date')
         pro=list(pro)
         return pro    
         pass
