@@ -12,7 +12,7 @@ problemSet=__client.extension.problemSet
 
 """
 customer={nickName, _id, birthday, age, sex, location, birthPlace, signInDate, bloodType, signature(one word), qq, wechat, phone, email, friend:[customerId_tagName, customerId_tagName, ...]} #customere static information
-history={customerId, date, domain, url}
+history={customerId, date, renewdate host, url, duration}
 profile={customerId, date, saying(usually several words represent the mood, will save with format that contain picture or emoj)}
 descriptAttr={_id, feature, example:[will list some of the customerid]}
 description={customerId, attrPairs:{attrId1:likeRate, attrId2: likeRate, ....}}
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     #db.customer.insert({nickName:'test', customerid:'test', birthday:'test', age:'test', sex:'test', location:'test', birthPlace:'test', signInDate:'test',_id:'test', bloodType:'test', signature:'test', qq:'test', wechat:'test', phone:'test', email:'test', friend:['customerId_tagName', 'customerId_tagName']})
     
     # customer.insert({'nickNmae': 'father', '_id': '3', 'sex': False, 'age': 0, 'friend':['1_default']})
-    # history.insert({'customerId':'1', 'date':dt.today(),'domain':'fun.com','url':'www.fun.com/adk/83'})
+    # history.insert({'customerId':'1', 'builddate':dt.today(), 'renewdate': dt.today(),'host':'fun.com','url':'www.fun.com/adk/83', duration: 1})
     # profile.insert({'customerId':'1', 'date':dt.today(), 'saying':'i love you'})
     # descriptAttr.insert({'_id':'die','feature':'ksgasjkdgkajddkgjakdjkgj', 'example':['1']})
     # description.insert({'_id':'1', 'attrPairs':{'die':0.9, 'out':0.2}})

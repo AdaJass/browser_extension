@@ -1,6 +1,9 @@
 #this class store the cumstomer's curent state
 import uuid
 import mongo as db
+from datetime import datetime as dt
+from datetime import timedelta as td
+from urllib.parse import urlparse
 
 __Description_Attrib=list(db.descriptAttr.find({}))
 Description_Attrib={}
@@ -8,6 +11,7 @@ for it in __Description_Attrib:
     Description_Attrib[it['_id']]=it.pop('_id')
 
 All_Customer = dict()
+All_Customer_WS = dict()
 
 class Customer:
     def __init__(self, customerid, currentpage):
@@ -55,8 +59,23 @@ class Customer:
         return his
 
     def get_profile(self, start_date, end_date):
-        pro=db.profile.find({'customerId':self.customerid, 'date':{'$gte':date, '$lte': end_date}}).sort('date')
+        pro=db.profile.find({'customerId':self.customerid, 'date':{'$gte':start_date, '$lte': end_date}}).sort('date')
         pro=list(pro)
         return pro    
         pass
 
+    def set_profile(self, ss):
+        db.profile.insert_one({'customerId':self.customerid, 'date': dt.today(), 'saying': ss})
+    
+    def set_history(self, page=None):
+        if page == None:
+            page = self.currentpage
+        parse = urlparse(page)
+        val = dt.today()-td(1)
+        if db.history.count({'customerId': self.customerid, 'url': page,'date':{'$gte': val}}) >=1:
+            db.history.update_many({'customerId': self.customerid, 'url': page,'date':{'$gte': val}}, {'$inc':{'duration':1}, '$set':{'renewdate':dt.today()}})
+        else:
+            db.history.insert_one({'customerId': self.customerid, 'date': dt.today(), 'renewdate': dt.today(), 'host': parse.hostname, 'url': page, 'duration':1})
+
+    def update_customer(self, body):
+        db.customer.update_one({'_id': self.customerid}, '$set': body)

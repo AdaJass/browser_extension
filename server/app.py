@@ -24,19 +24,20 @@ async def handler(websocket, path):
         cus_id = message['option'].get('customId')
         psw = message['option'].get('password')
         if cus_id and not psw:
-            websocket.send({'msgid':'error','option':{'type':'no password'}})
+            await websocket.send({'msgid':'error','option':{'type':'no password'}})
             return
         if not cus_id and message['option'].get('anonymous'):
             anon=True
         else:
             result=control.login(cus_id, psw)
         if not result:
-            websocket.send({'msgid':'error','option':{'type':'password wrong'}})
+            await websocket.send({'msgid':'error','option':{'type':'password wrong'}})
             return
         cpg = [message['body']['currentpage']]
         if result or anon:
             All_Customer[websocket] = Customer(cus_id, cpg)
-            websocket.send({'msgid':'login','option':{'type':'succeeds'}})
+            All_Customer_WS[cus_id]=[websocket]
+            await websocket.send({'msgid':'login','option':{'type':'succeeds'}})
             return
     else:
         control.task_center(websocket, message)
