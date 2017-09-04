@@ -5,16 +5,13 @@
     </head>
     <body>
         <script>
-            var ws = new WebSocket("ws://127.0.0.1:8765/"),
-                messages = document.createElement('ul');
-            ws.onmessage = function (event) {
-                var messages = document.getElementsByTagName('ul')[0],
-                    message = document.createElement('li'),
-                    content = document.createTextNode(event.data);
-                message.appendChild(content);
-                messages.appendChild(message);
+            var ws = new WebSocket("ws://127.0.0.1:5678/");
+            ws.onopen = function(){
+                ws.send("hello");
+
             };
-            document.body.appendChild(messages);
+            msg={'msgid':'login', 'option':{'anonymous': true}, 'body':{'currentpage':}}
+            
         </script>
     </body>
 </html>

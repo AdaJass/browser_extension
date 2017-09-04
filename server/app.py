@@ -10,7 +10,7 @@ import control
 
 
 async def handler(websocket, path): 
-    print(path)
+    print('the path is: ',path)
     try:
         message = await websocket.recv()
     except Exception as err:

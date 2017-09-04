@@ -78,4 +78,4 @@ class Customer:
             db.history.insert_one({'customerId': self.customerid, 'date': dt.today(), 'renewdate': dt.today(), 'host': parse.hostname, 'url': page, 'duration':1})
 
     def update_customer(self, body):
-        db.customer.update_one({'_id': self.customerid}, '$set': body)
+        db.customer.update_one({'_id': self.customerid}, {'$set': body})
