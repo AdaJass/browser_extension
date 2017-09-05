@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>WebSocket demo</title>
-    </head>
-    <body>
         <script>
             var ws = new WebSocket("ws://127.0.0.1:5678/");
             ws.onopen = function(){
-                ws.send("hello");
-
+                //ws.send(JSON.stringify({'msgid':'greet', 'body':'hello'}));
+                msg={'msgid':'login', 'option':{'anonymous': true}, 'body':{'currentpage':'www.baidu.com'}};
+                ws.send(JSON.stringify(msg));
             };
-            msg={'msgid':'login', 'option':{'anonymous': true}, 'body':{'currentpage':}}
+            setInterval(function(){ws.send(JSON.stringify({'msgid':'hello'}));}, 10000); 
+            ws.onclose = function(evt) {
+                console.log("Connection closed.");
+            }; 
+            ws.onmessage=function(msg){
+                console.log(msg);
+            }
             
         </script>
+        <title>WebSocket demo</title>
+    </head>
+    <body>
+
     </body>
 </html>

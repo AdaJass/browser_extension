@@ -17,11 +17,13 @@ class Customer:
     def __init__(self, customerid, currentpage):
         if not customerid:
             self.customerid = str(uuid.uuid5(uuid.uuid4(),'cunstomerID'))
+            self.description = None
         else:
             self.customerid = customerid
+            self.description = db.description.find_one({'_id': self.customerid})
 
         self.currentpage = currentpage
-        self.description = db.description.find_one({'_id': self.cumstomerid})
+        
         self.basic_info = None
         self.page_contact = None
 

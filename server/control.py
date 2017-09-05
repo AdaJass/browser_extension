@@ -2,14 +2,6 @@ from customer import *
 from datetime import datetime as dt
 import json
 
-operation={
-    'history': history,
-    'profile': profile,
-    'customer'customer,
-    'description':description,
-    'problem':problem,
-    'chat'chat
-}
 
 """
 message={
@@ -24,12 +16,11 @@ async def task_center(ws, message):
     pass
 
 
-
 async def history(ws, msg):
     """
     update the structure of history and make it easy to analysis page's attraction.
     """
-    if msg['option'].get('output') == 'true:
+    if msg['option'].get('output') == 'true':
         start_date = msg['option'].get('startdate')
         if start_date:
             his = All_Customer[ws].get_history(start_date)
@@ -43,7 +34,7 @@ async def history(ws, msg):
         
 
 async def profile(ws, msg):
-    if msg['option'].get('output') == 'true:
+    if msg['option'].get('output') == 'true':
         start_date = msg['option'].get('start_date')
         end_date = msg['option'].get('end_date')
         pro = All_Customer[ws].get_profile(start_date, end_date)
@@ -53,7 +44,7 @@ async def profile(ws, msg):
     pass 
 
 async def customer(ws, msg):
-    if msg['option'].get('output') == 'true:
+    if msg['option'].get('output') == 'true':
         if All_Customer[ws].basic_info is not NOne:
             await ws.send(json.dumps(All_Customer[ws].basic_info))
         else:
@@ -66,3 +57,19 @@ async def chat(msg):
     zero = msg['option'].get('from')
     one = msg['option'].get('to')
     await All_Customer_WS[one].send(json.dumps(msg))
+
+async def description():
+    pass
+
+async def problem():
+    print('problem.')
+    pass
+
+operation={
+    'history': history,
+    'profile': profile,
+    'customer':customer,
+    'description':description,
+    'problem':problem,
+    'chat':chat
+}
