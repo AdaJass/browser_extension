@@ -8,12 +8,26 @@
                 msg={'msgid':'login', 'option':{'anonymous': true}, 'body':{'currentpage':'www.baidu.com'}};
                 ws.send(JSON.stringify(msg));
             };
-            setInterval(function(){ws.send(JSON.stringify({'msgid':'hello'}));}, 10000); 
+            setTimeout(function(){ws.send(JSON.stringify({'msgid':'contactable'}));}, 30000); 
             ws.onclose = function(evt) {
                 console.log("Connection closed.");
             }; 
             ws.onmessage=function(msg){
-                console.log(msg);
+                console.log(msg.data);
+                var data = JSON.parse(msg.data)
+                if(data.msgid == 'loginsucceed')
+                    customerid = data.option.customerid;
+                if(data.msgid =='contactable')
+                {
+                    var pgc = data.body.pagecontact;
+                    console.log(pgc);
+                    pgc.forEach(function(element) {
+                        var smsg={'msgid':'chat','option':{'from':customerid,'to':element},'body':'hello guys!'};
+                        ws.send(JSON.stringify(smsg));
+                    }, this);
+
+                }
+                //console.log(data.option.customerid);
             }
             
         </script>

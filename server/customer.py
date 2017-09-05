@@ -8,10 +8,11 @@ from urllib.parse import urlparse
 __Description_Attrib=list(db.descriptAttr.find({}))
 Description_Attrib={}
 for it in __Description_Attrib:
-    Description_Attrib[it['_id']]=it.pop('_id')
+    idd = it.pop('_id')
+    Description_Attrib[idd] = it
 
-All_Customer = dict()
-All_Customer_WS = dict()
+All_Customer = dict()  # {ws obj: customer obj}
+All_Customer_WS = dict()  #{customer id: ws obj}
 
 class Customer:
     def __init__(self, customerid, currentpage):
@@ -27,21 +28,23 @@ class Customer:
         self.basic_info = None
         self.page_contact = None
 
-    def get_current_contact(self, allcus):
+    def get_current_contact(self):
         '''
         get the current contactable people and insert to list
         allcus is a dict which storge all cumstomer lisk: {'custID': CustomerObject}
         '''
         page_con=[]
-        for cid,obj in enumerate(allcus):
+        for ws,obj in All_Customer.items():
             if obj.currentpage == self.currentpage:
-                page_con.append(cid)
+                page_con.append(All_Customer[ws].customerid)
         self.page_contact = page_con
-              
+        return page_con              
         pass
     
     
     def get_basic_info(self):
+        if len(self.customerid) == 36:            
+            return
         cursor=db.customer.find_one({'_id': self.customerid})
         friend=cursor['friend']
         friends=dict()

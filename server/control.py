@@ -10,6 +10,8 @@ message={
     'body':{}
 }
 """
+def login(uid, psw):
+    pass
 
 async def task_center(ws, message):    
     await operation.get(message['msgid'])(ws, message)
@@ -45,7 +47,7 @@ async def profile(ws, msg):
 
 async def customer(ws, msg):
     if msg['option'].get('output') == 'true':
-        if All_Customer[ws].basic_info is not NOne:
+        if All_Customer[ws].basic_info is not None:
             await ws.send(json.dumps(All_Customer[ws].basic_info))
         else:
             All_Customer[ws].get_basic_info()
@@ -53,7 +55,7 @@ async def customer(ws, msg):
     if msg['option'].get('input') == 'true':
         All_Customer[ws].update_customer(msg['body'])
 
-async def chat(msg):
+async def chat(ws, msg):
     zero = msg['option'].get('from')
     one = msg['option'].get('to')
     await All_Customer_WS[one].send(json.dumps(msg))
@@ -65,11 +67,23 @@ async def problem():
     print('problem.')
     pass
 
+async def get_contect(ws, msg):
+    pagecontact = All_Customer[ws].get_current_contact()
+    if len(All_Customer[ws].customerid) == 36:
+        await ws.send(json.dumps({'msgid':'contactable','body':{'pagecontact':pagecontact, 'friends':{}}}))
+        return
+    if All_Customer[ws].basic_info is None:
+        All_Customer[ws].get_basic_info()
+    if type(All_Customer[ws].basic_info) is type({}) and All_Customer[ws].get('friend') is not None:
+        await ws.send(json.dumps({'msgid':'contactable','body':{'pagecontect':pagecontact, 'friends':All_Customer[ws].basic_info['friend']}}))
+    
+
 operation={
     'history': history,
     'profile': profile,
     'customer':customer,
     'description':description,
     'problem':problem,
-    'chat':chat
+    'chat':chat,
+    'contactable': get_contect,
 }

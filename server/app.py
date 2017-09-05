@@ -55,8 +55,8 @@ async def handler(websocket, path):
             cpg = [message['body']['currentpage']]
             if result or anon:
                 All_Customer[websocket] = Customer(cus_id, cpg)
-                All_Customer_WS[All_Customer[websocket].customerid]=[websocket]
-                await websocket.send(json.dumps({'msgid':'login','option':{'type':'succeeds'}}))
+                All_Customer_WS[All_Customer[websocket].customerid] = websocket
+                await websocket.send(json.dumps({'msgid':'loginsucceed','option':{'customerid':All_Customer[websocket].customerid}}))
     
 
 start_server = websockets.serve(handler, 'localhost', 5678)
