@@ -67,7 +67,7 @@ async def problem():
     print('problem.')
     pass
 
-async def get_contect(ws, msg):
+async def get_contact(ws, msg):
     pagecontact = All_Customer[ws].get_current_contact()
     if len(All_Customer[ws].customerid) == 36:
         await ws.send(json.dumps({'msgid':'contactable','body':{'pagecontact':pagecontact, 'friends':{}}}))
@@ -85,5 +85,5 @@ operation={
     'description':description,
     'problem':problem,
     'chat':chat,
-    'contactable': get_contect,
+    'contactable': get_contact,
 }
