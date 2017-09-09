@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+
+  "name": "Extension",
+  "description": "Make browser talkable and upload some info to server.",
+  "version": "1.0",
+
+  "permissions": [
+    "http://127.0.0.1:5678/*",    
+    "tabs",
+    "notifications"
+  ],
+  "page_action": {
+		"default_icon": {
+			"19": "cnblogs_19.png",
+			"38": "cnblogs_38.png"
+		},
+		"default_title": "information", // shown in tooltip
+		"default_popup": "popup.html"
+	},
+  "background": { "scripts": ["background.js"] }
+  
+}
