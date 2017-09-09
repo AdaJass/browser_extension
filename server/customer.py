@@ -59,20 +59,28 @@ class Customer:
         pass
 
     def get_history(self, date):
+        if len(self.customerid) == 36:            
+            return
         his=db.history.find({'customerId':self.customerid, 'date':{'$gte':date}}).sort('date')
         his=list(his)
         return his
 
     def get_profile(self, start_date, end_date):
+        if len(self.customerid) == 36:            
+            return
         pro=db.profile.find({'customerId':self.customerid, 'date':{'$gte':start_date, '$lte': end_date}}).sort('date')
         pro=list(pro)
         return pro    
         pass
 
     def set_profile(self, ss):
+        if len(self.customerid) == 36:            
+            return
         db.profile.insert_one({'customerId':self.customerid, 'date': dt.today(), 'saying': ss})
     
     def set_history(self, page=None):
+        if len(self.customerid) == 36:            
+            return
         if page == None:
             page = self.currentpage
         parse = urlparse(page)
@@ -83,4 +91,6 @@ class Customer:
             db.history.insert_one({'customerId': self.customerid, 'date': dt.today(), 'renewdate': dt.today(), 'host': parse.hostname, 'url': page, 'duration':1})
 
     def update_customer(self, body):
+        if len(self.customerid) == 36:            
+            return
         db.customer.update_one({'_id': self.customerid}, {'$set': body})

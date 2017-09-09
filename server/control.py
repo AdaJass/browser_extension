@@ -20,7 +20,7 @@ async def task_center(ws, message):
 
 async def history(ws, msg):
     """
-    update the structure of history and make it easy to analysis page's attraction.
+    get or set history and make it easy to analysis page's attraction.
     """
     if msg['option'].get('output') == 'true':
         start_date = msg['option'].get('startdate')
