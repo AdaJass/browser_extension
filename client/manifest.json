@@ -6,7 +6,7 @@
   "version": "1.0",
 
   "permissions": [
-    "http://127.0.0.1:5678/*",    
+    "ws://127.0.0.1:5678/*",    
     "tabs",
     "notifications"
   ],

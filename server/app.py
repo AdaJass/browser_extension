@@ -16,7 +16,7 @@ async def handler(websocket, path):
             message = await websocket.recv() 
             # print(All_Customer)
             # print(All_Customer_WS)
-            # print('the message is: ', message)
+            print('the message is: ', message)
             message = json.loads(message)
         except Exception as err:
             print(err.args,' error')
