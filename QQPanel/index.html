@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>美橙互联官网网站右侧在线客服QQ代码 - 懒人之家</title>
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script src="js/jquery.KinSlideshow-1.2.1.min.js" type="text/javascript"></script>
+<link href="css/lanrenzhijia.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<script>
+function changeOnline(num) {
+	if (isNaN(num) && num == "")
+		return;
+	for (var i = 1; i <=6 ; i++)
+	{
+		if (i == num)
+		{
+			document.getElementById("onlineSort" + i).className = "online_bar expand";
+			document.getElementById("onlineType" + i).style.display = "block";
+		}
+		else
+		{
+			document.getElementById("onlineSort" + i).className = "online_bar collapse";
+			document.getElementById("onlineType" + i).style.display = "none";
+		}
+	}
+}
+
+$(document).ready(function(){
+  $("#floatShow").bind("click",function(){
+    $('#onlineService').animate({width: 'show', opacity: 'show'}, 'normal',function(){ $('#onlineService').show(); });$('#floatShow').attr('style','display:none');$('#floatHide').attr('style','display:block');
+	return false;
+  });
+  $("#floatHide").bind("click",function(){
+	$('#onlineService').animate({width: 'hide', opacity: 'hide'}, 'normal',function(){ $('#onlineService').hide(); });$('#floatShow').attr('style','display:block');$('#floatHide').attr('style','display:none');
+  });
+  $(document).bind("click",function(event){
+	if ($(event.target).isChildOf("#online_qq_layer") == false)
+	{
+	 $('#onlineService').animate({width: 'hide', opacity: 'hide'}, 'normal',function(){ $('#onlineService').hide(); });$('#floatShow').attr('style','display:block');$('#floatHide').attr('style','display:none');
+	}
+  });
+jQuery.fn.isChildAndSelfOf = function(b){
+    return (this.closest(b).length > 0);
+};
+jQuery.fn.isChildOf = function(b){
+    return (this.parents(b).length > 0);
+};
+  //$(window).scroll(function(){ 
+	//$('#online_qq_layer').stop().animate({top:$(document).scrollTop() + $("#online_qq_layer").height()}, 100) 
+  //}); 
+});
+</script>
+<div id="online_qq_layer">
+	<div id="online_qq_tab">
+		<div class="online_icon">
+			<a title id="floatShow" style="display: block;" href="javascript:void(0);">&nbsp;</a>
+			<a title id="floatHide" style="display: none;" href="javascript:void(0);">&nbsp;</a>
+		</div>
+		<!--online_icon end--></div>
+	<div id="onlineService">
+		<div class="online_windows overz">
+			<div class="online_w_top">
+			</div>
+			<!--online_w_top end-->
+			<div class="online_w_c overz">
+				<div class="online_bar expand" id="onlineSort1">
+					<h2><a onclick="changeOnline(1)">域名/虚拟主机</a></h2>
+					<div class="online_content overz" id="onlineType1">
+						<ul class="overz">
+							<li>
+							<a onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&amp;sid=123456&amp;o=www.lanrenzhijia.com&amp;q=7', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');" class="qq_icon">
+							企业QQ交谈</a></li>
+							<li>企业QQ： 
+							<a onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&amp;sid=123456&amp;o=www.lanrenzhijia.com&amp;q=7', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');">
+							123456</a></li>
+						</ul>
+					</div>
+					<!--online_content end--></div>
+				<!--online_bar end-->
+				<div class="online_bar collapse" id="onlineSort2">
+					<h2><a onclick="changeOnline(2)">企业邮局</a></h2>
+					<div class="online_content overz" id="onlineType2">
+						<ul class="overz">
+							<li>
+							<a onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&amp;sid=123456&amp;o=www.lanrenzhijia.com&amp;q=7', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');" class="qq_icon">
+							企业QQ交谈</a></li>
+							<li>企业QQ： 
+							<a onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&amp;sid=123456&amp;o=www.lanrenzhijia.com&amp;q=7', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');">
+							123456</a></li>
+						</ul>
+					</div>
+				</div>
+				<!--online_bar end-->
+				<div class="online_bar collapse" id="onlineSort3">
+					<h2><a onclick="changeOnline(3)">建站之星/网店</a></h2>
+					<div class="online_content overz" id="onlineType3">
+						<ul class="overz">
+							<li>
+							<a onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&amp;sid=123456&amp;o=www.lanrenzhijia.com&amp;q=7', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');" class="qq_icon">
+							企业QQ交谈</a></li>
+							<li>企业QQ： 
+							<a onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&amp;sid=123456&amp;o=www.lanrenzhijia.com&amp;q=7', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');">
+							123456</a></li>
+						</ul>
+					</div>
+				</div>
+				<!--online_bar end-->
+				<div class="online_bar collapse" id="onlineSort4">
+					<h2><a onclick="changeOnline(4)">代理咨询</a></h2>
+					<div class="online_content overz" id="onlineType4">
+						<ul class="overz">
+							<li>
+							<a onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&amp;sid=123456&amp;o=www.lanrenzhijia.com&amp;q=7', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');" class="qq_icon">
+							企业QQ交谈</a></li>
+							<li>企业QQ： 
+							<a onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&amp;sid=123456&amp;o=www.lanrenzhijia.com&amp;q=7', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');">
+							123456</a></li>
+						</ul>
+					</div>
+				</div>
+				<!--online_bar end-->
+				<div class="online_bar collapse" id="onlineSort5">
+					<h2><a onclick="changeOnline(5)">网站推广</a></h2>
+					<div class="online_content overz" id="onlineType5">
+						<ul class="overz">
+							<li>
+							<a onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&amp;sid=123456&amp;o=www.lanrenzhijia.com&amp;q=7', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');" class="qq_icon">
+							企业QQ交谈</a></li>
+							<li>企业QQ： 
+							<a onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&amp;sid=123456&amp;o=www.lanrenzhijia.com&amp;q=7', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');">
+							123456</a></li>
+						</ul>
+					</div>
+				</div>
+				<!--online_bar end-->
+				<div class="online_bar collapse" id="onlineSort6">
+					<h2><a onclick="changeOnline(6)">橙云主机(IDC)</a></h2>
+					<div class="online_content overz" id="onlineType6">
+						<!-- <ul class="overz">
+						<li><a class="qqlink" href="javascript:void(0);" onclick="javascript:window.open('tencent://message/?uin=934318882&amp;Site=http://www.lanrenzhijia.com&amp;Menu=yes;', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');"><img src="../../images/qqs_1.gif" border="0">934318882</a></li>
+					</ul> -->
+						<ul class="overz">
+							<li>
+							<a class="qqlink" href="javascript:void(0);" onclick="javascript:window.open('tencent://message/?uin=123456&amp;Site=http://www.lanrenzhijia.com&amp;Menu=yes;', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');">
+							<img src="images/qqs_1.gif" border="0">123456</a></li>
+						</ul>
+						<ul class="overz">
+							<li>
+							<a class="qqlink" href="javascript:void(0);" onclick="javascript:window.open('tencent://message/?uin=123456&amp;Site=http://www.lanrenzhijia.com&amp;Menu=yes;', '_blank', 'height=544, width=644,toolbar=no,scrollbars=no,menubar=no,status=no');">
+							<img src="images/qqs_1.gif" border="0">123456</a></li>
+						</ul>
+					</div>
+				</div>
+				<!--online_bar end--></div>
+			<!--online_w_c end-->
+			<div class="online_w_bottom">
+			</div>
+			<!--online_w_bottom end--></div>
+		<!--online_windows end--></div>
+</div>
+<!-- online qq end -->
+<div style="height:1500px;">
+</div>
+</body>
+</html>
