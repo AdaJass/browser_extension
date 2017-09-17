@@ -1,4 +1,5 @@
 import asyncio
+from aiohttp import web
 import datetime
 import json
 import random
@@ -8,7 +9,16 @@ from customer import *
 import control
 
 # uuid.uuid5(uuid.uuid4(),'cunstomerID')
+async def resp_data(request):
+    return web.json_response({'ss':'ss'})
 
+async def init_webserver(loop):
+    app = web.Application()
+    app.router.add_route('GET', '/data', resp_data)
+    srv = await loop.create_server(
+        app.make_handler(), '0.0.0.0', 8000)
+    print('Sever starts at port: 8000')
+    return srv 
 
 async def handler(websocket, path):
     while  True:        
@@ -61,5 +71,10 @@ async def handler(websocket, path):
 
 start_server = websockets.serve(handler, 'localhost', 5678)
 
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+loop=asyncio.get_event_loop()
+tasks=[init_webserver(loop), start_server]
+loop.run_until_complete(asyncio.wait(tasks))
+try:
+    loop.run_forever()
+except KeyboardInterrupt:
+    pass

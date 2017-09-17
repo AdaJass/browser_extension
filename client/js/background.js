@@ -1,9 +1,11 @@
 var ws = new WebSocket("ws://127.0.0.1:5678/");
+var Contact_List={}
 ws.onopen = function(){
     //ws.send(JSON.stringify({'msgid':'greet', 'body':'hello'}));
     msg={'msgid':'login', 'option':{'anonymous': true}, 'body':{'currentpage':'www.bai.com'}};
     ws.send(JSON.stringify(msg));
 };
+
 
 var getAndSendUrl=function(){    
         var queryInfo = {
@@ -65,3 +67,14 @@ ws.onmessage = function(msg){
   var mesg = JSON.parse(msg);
   operation[mesg['msgid']](mesg) 
 }
+
+
+
+////////////////////////////////////////////////////////////////////////
+/*--------------------popuo.js------------------------*/
+// var setContactList = function(){
+//   if(!Contact_List.friends){  
+//     var data = {'msgid':'contactable'};    
+//     ws.send(JSON.stringify(data));
+//   }
+// }

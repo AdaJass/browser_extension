@@ -1,25 +1,16 @@
+*{
+    margin:0;
+    padding:0;
+    list-style-type:none;        
+}
+body{background:#2d2c41;height:100%;font-family: 'Open Sans', Arial, Helvetica, Sans-serif, Verdana, Tahoma;padding-bottom:30px;}
 
-*{margin:0;padding:0;list-style-type:none;}
-
-a,img{border:0;}
-
-body{background:#e3e3e3;height:100%;font:normal normal 12px/24px "Microsoft yahei", Arial;padding-bottom:30px;}
-
-a{color:#333;text-decoration:none;}
-
-a:hover{color:#093;text-decoration:none;}
-
-#title{width:300px;margin:3% auto 0;}
-
-#title h2{font-size:18px;}
-
-#wrapper{width:980px;margin:0 auto;background:#f8f8f8;border:1px solid #a3a3a3;padding:20px 20px 50px;border-radius:5px;-moz-border-radius:5px;}
 
 h3{color:#333;font-size:14px;text-align:center;margin:20px 0;}
 
 /* box */
 
-.box{width:400px;margin:10px auto 0;background:#fff;border:1px solid #d3d3d3;} 
+.box{width:400px;height:600px;margin:10px auto 0;background:#2d2c41;border:1px solid #d3d3d3;} 
 
 .tab_menu{overflow:hidden;}
 
@@ -31,10 +22,6 @@ h3{color:#333;font-size:14px;text-align:center;margin:20px 0;}
 
 .tab_menu li.current a{color:#333;}
 
-.tab_box{padding:20px;}
-
-.tab_box li{height:24px;line-height:24px;overflow:hidden;}
-
-.tab_box li span{margin:0 5px 0 0;font-family:"宋体";font-size:12px;font-weight:400;color:#ddd;}
+.tab_box{padding:5px;}
 
 .tab_box .hide{display:none;}}
