@@ -10,7 +10,6 @@ ws.onopen = function(){
     ws.send(JSON.stringify(msg));
 };
 
-
 var getAndSendUrl=function(){    
         var queryInfo = {
           active: true,
@@ -52,7 +51,7 @@ function chat(msg){
 }
 
 function get_contact(msg){
-
+  
 }
 
 

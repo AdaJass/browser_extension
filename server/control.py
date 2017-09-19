@@ -75,7 +75,7 @@ async def get_contact(ws, msg):
     if All_Customer[ws].basic_info is None:
         All_Customer[ws].get_basic_info()
     if type(All_Customer[ws].basic_info) is type({}) and All_Customer[ws].get('friend') is not None:
-        await ws.send(json.dumps({'msgid':'contactable','body':{'pagecontect':pagecontact, 'friends':All_Customer[ws].basic_info['friend']}}))
+        await ws.send(json.dumps({'msgid':'contactable','body':{'pagecontact':pagecontact, 'friends':All_Customer[ws].basic_info['friend']}}))
     
 
 operation={
