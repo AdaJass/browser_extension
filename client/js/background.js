@@ -2,6 +2,10 @@ var ws = new WebSocket("ws://127.0.0.1:5678/");
 var Contact_List={}
 ws.onopen = function(){
     //ws.send(JSON.stringify({'msgid':'greet', 'body':'hello'}));
+
+    /*first load the customer infomation from lacalstorage, if there isn't. Popup a login 
+      dialog from contentscript.
+    */
     msg={'msgid':'login', 'option':{'anonymous': true}, 'body':{'currentpage':'www.bai.com'}};
     ws.send(JSON.stringify(msg));
 };
