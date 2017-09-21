@@ -12,15 +12,15 @@
   ],
   "page_action": {
 		"default_icon": {
-			"19": "icon.png",
-			"38": "icon.png"
+			"19": "images/icon.png",
+			"38": "images/icon.png"
 		},
 		"default_title": "information", // shown in tooltip
 		"default_popup": "popup.html"
 	},
-  "background": { "scripts": ["background.js"] },
+  "background": { "scripts": ["js/jquery-2.1.1.min.js" ,"background.js"] },
   "content_scripts": [{
     "matches": ["https://*/*","http://*/*"],
-    "js": ["content_script.js"]
+    "js": ["content_script.js", "js/jquery-2.1.1.min.js"]
   }]  
 }
