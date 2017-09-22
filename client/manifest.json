@@ -16,11 +16,11 @@
 			"38": "images/icon.png"
 		},
 		"default_title": "information", // shown in tooltip
-		"default_popup": "popup.html"
+		"default_popup": "index.html"
 	},
-  "background": { "scripts": ["js/jquery-2.1.1.min.js" ,"background.js"] },
+  "background": { "scripts": ["js/jquery-2.1.1.min.js" ,"js/background.js", "js/bg_2_content.js"]  },
   "content_scripts": [{
     "matches": ["https://*/*","http://*/*"],
-    "js": ["content_script.js", "js/jquery-2.1.1.min.js"]
+    "js": ["js/jquery-2.1.1.min.js", "js/content.js"]
   }]  
 }
