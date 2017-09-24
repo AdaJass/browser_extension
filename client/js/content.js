@@ -1,7 +1,7 @@
 var port = chrome.runtime.connect({name: "currentpage"});
-port.postMessage({current_page: "Knock knock"});
+port.postMessage({init: "yes"});
 var last_pagecontact=[]
-// setInterval(function(){port.postMessage({current_page: 1});}, 1500);
+setInterval(function(){port.postMessage({current_page: $('title').text()});}, 9000);
 
 port.onMessage.addListener(function(msg) {
     var pagecontact = msg.pagecontact
@@ -10,7 +10,8 @@ port.onMessage.addListener(function(msg) {
         last_pagecontact = pagecontact;             
     }
     if (msg.barrager){        
-        alert('front receive msg.');        
+        alert('front receive msg.'+msg.barrager);   
+        a=9;     
     }
     
     if (msg.login){
