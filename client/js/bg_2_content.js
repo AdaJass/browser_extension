@@ -1,14 +1,16 @@
-var bg_port = null;
-chrome.runtime.onConnect.addListener(function(port) {
-    console.assert(port.name == "currentpage");
-    bg_port = port;
-    port.onMessage.addListener(function(msg) {
-      if (msg.current_page)
-        port.postMessage(Contact_List);  
-        //alert('back recieve msg!');    
-    });    
+// chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+//     chrome.tabs.sendMessage(tabs[0].id, {greeting: "background say hello"});
+//     alert(tabs.length)
+//   });
+
+chrome.runtime.onMessage.addListener(
+    function(msg, sender) {
+      if(msg.msgid == 'chat'){
+          msg.tabid = sender.tab.id;
+          ws.send(JSON.stringify(msg));
+      }
+      chrome.tabs.sendMessage(sender.tab.id, {greeting: "background say hello"});
 });
 
-setInterval(function(){if(bg_port){bg_port.postMessage({barrager:{}});}}, 20000);
-
+//here insert tabid to massage to send to background.
 

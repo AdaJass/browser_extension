@@ -46,8 +46,8 @@ function problem(msg){
 
 }
 
-function chat(msg){
-
+function chat(msg){  
+  chrome.tabs.sendMessage(msg.tabid, msg);
 }
 
 function get_contact(msg){
