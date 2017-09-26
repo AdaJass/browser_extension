@@ -6,7 +6,7 @@
 chrome.runtime.onMessage.addListener(
     function(msg, sender) {
       if(msg.msgid == 'chat'){
-          msg.tabid = sender.tab.id;
+          Chat_Tab[msg.from] = sender.tab.id;
           ws.send(JSON.stringify(msg));
       }
       chrome.tabs.sendMessage(sender.tab.id, {greeting: "background say hello"});

@@ -6,6 +6,7 @@
   "version": "1.0",
 
   "permissions": [
+    "http://localhost:3000/*",
     "ws://127.0.0.1:5678/*",    
     "tabs",
     "notifications"
@@ -20,7 +21,10 @@
 	},
   "background": { "scripts": ["js/jquery-2.1.1.min.js" ,"js/background.js", "js/bg_2_content.js"]  },
   "content_scripts": [{
-    "matches": ["https://*/*","http://*/*"],
-    "js": ["js/jquery-2.1.1.min.js", "js/content.js"]
+    "matches": [
+      "<all_urls>"
+    ],
+    "js": ["js/jquery-2.1.1.min.js", "js/jquery.barrager.js", "js/content.js"],
+    "css":["css/barrager.css"]
   }]  
 }

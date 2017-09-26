@@ -16,8 +16,8 @@ async def init_webserver(loop):
     app = web.Application()
     app.router.add_route('GET', '/data', resp_data)
     srv = await loop.create_server(
-        app.make_handler(), '0.0.0.0', 8000)
-    print('Sever starts at port: 8000')
+        app.make_handler(), '0.0.0.0', 3000)
+    print('Sever starts at port: 3000')
     return srv 
 
 async def handler(websocket, path):

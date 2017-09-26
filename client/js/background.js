@@ -1,5 +1,7 @@
 var ws = new WebSocket("ws://127.0.0.1:5678/");
-var Contact_List={}
+var Contact_List={};
+var Chat_Tab = {};
+
 ws.onopen = function(){
     //ws.send(JSON.stringify({'msgid':'greet', 'body':'hello'}));
 
@@ -20,11 +22,19 @@ var getAndSendUrl=function(){
           //console.log(tabs.length()) 
           console.log(JSON.stringify(tab))
           var url = tab.url; 
-          var data = {'msgid':'history', 'option':{'input':'true'},'body':{'url':url}};    
+          var data = {'msgid':'history', 'input':'true','body':url};    
           ws.send(JSON.stringify(data));
         });
 };
 setInterval(getAndSendUrl,10000);
+
+chrome.tabs.onUpdated.addListener(function(tabid, changeinfo){
+  if(changeinfo.url){
+    var data = {'msgid':'history', 'input':'true','body': changeinfo.url};    
+    ws.send(JSON.stringify(data));
+  }
+});
+
 
 function _history(msg){
 
@@ -47,7 +57,8 @@ function problem(msg){
 }
 
 function chat(msg){  
-  chrome.tabs.sendMessage(msg.tabid, msg);
+  var tab = Chat_Tab[msg.to];
+  chrome.tabs.sendMessage(tab, msg);
 }
 
 function get_contact(msg){
