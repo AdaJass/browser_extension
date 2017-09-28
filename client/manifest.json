@@ -25,6 +25,6 @@
       "<all_urls>"
     ],
     "js": ["js/jquery-2.1.1.min.js", "js/jquery.barrager.js", "js/content.js"],
-    "css":["css/barrager.css"]
+    "css":["css/barrager.css","css/content.css"]
   }]  
 }

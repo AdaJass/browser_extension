@@ -31,7 +31,7 @@ async def history(ws, msg):
         await ws.send(json.dumps(his))
 
     if  msg.get('input') =='true':
-        cpage = msg['body']['url']
+        cpage = msg['body']
         All_Customer[ws].set_history(cpage)
         
 
