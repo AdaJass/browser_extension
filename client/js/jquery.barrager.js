@@ -4,7 +4,6 @@
  *@url      https://github.com/yaseng/jquery.barrager.js
  */
 (function($) {
-
 	$.fn.barrager = function(barrage) {
 		barrage = $.extend({
 			close:true,

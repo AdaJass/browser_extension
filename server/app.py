@@ -7,7 +7,8 @@ import websockets
 import uuid
 from customer import *
 import control
-
+# import handler
+print(99)
 # uuid.uuid5(uuid.uuid4(),'cunstomerID')
 async def resp_data(request):
     return web.json_response({'ss':'ss'})
@@ -15,12 +16,13 @@ async def resp_data(request):
 async def init_webserver(loop):
     app = web.Application()
     app.router.add_route('GET', '/data', resp_data)
+    app.router.add_static('/static/', path='./static', name='static')
     srv = await loop.create_server(
         app.make_handler(), '0.0.0.0', 3000)
     print('Sever starts at port: 3000')
     return srv 
 
-async def handler(websocket, path):
+async def wsocket(websocket, path):
     while  True:        
         try:
             message = await websocket.recv() 
@@ -69,7 +71,7 @@ async def handler(websocket, path):
                 await websocket.send(json.dumps({'msgid':'loginsucceed','option':{'customerid':All_Customer[websocket].customerid}}))
     
 
-start_server = websockets.serve(handler, 'localhost', 5678)
+start_server = websockets.serve(wsocket, 'localhost', 5678)
 
 loop=asyncio.get_event_loop()
 tasks=[init_webserver(loop), start_server]

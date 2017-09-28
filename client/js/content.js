@@ -39,14 +39,9 @@ function setBarrager() {
     console.log(item.img);  
     $('body').barrager(item);
 }
-var example_item={'img':server_url+'images/heisenberg.png','info':'Heeeello world!'};
+var example_item={'img':server_url+'static/images/heisenberg.png','info':'Heeeello world!'};
 $('body').barrager(example_item);
 
-$('<img src="'+server_url+'images/haha.gif" />').appendTo("body");
-// setInterval(setBarrager,10000);
-
-var imgURL = server_url+"images/cute.png";
-document.getElementById("someimg").src = "images/cute.png";
 
 function clear_barrage() {
     $.fn.barrager.removeAll();
