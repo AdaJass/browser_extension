@@ -15,6 +15,7 @@ async def resp_data(request):
 async def init_webserver(loop):    
     app = web.Application()
     app.router.add_route('GET', '/data', resp_data)
+    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('/views'))
     app.router.add_static('/static/', path='./static', name='static')    
     srv = await loop.create_server(app.make_handler(), '0.0.0.0', 3000)
     print('Sever starts at port: 3000')
