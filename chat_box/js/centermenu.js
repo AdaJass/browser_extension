@@ -111,7 +111,7 @@
 	    		click:function(ret){},	//点击之后的方法	
 	    	}
 
-	    	var opt = $.extend(defaultSelectMenu, options||{});
+	    	var opt = $.extend(defaultSelectMenu, options||{}); //将结果合并到default**menu
 	    	var length = opt.source.length;
 
 	    	defaultSelectMenu._init = function(){
@@ -122,8 +122,8 @@
 		    	//获取ul的高度  (li的高度*source的length+1)
 		    	var ul_height = opt.liHeight * (opt.source.length);
 
-	    		_this.cpt_selectCenterMenu = $('<ul class="animated '+opt.animateIn+' cpt-selectCenterMenu ul-selectCenterMenu"></ul>').css({
-	    			width:opt.liWidth,
+	    		_this.cpt_selectCenterMenu = $('<div id="the_magic_box" class="animated '+opt.animateIn+' cpt-selectCenterMenu ul-selectCenterMenu"></div>').css({
+	    			width:'auto',
 	    			height:'auto',
 	    			background:opt.background,
 	    			'z-index':opt.zIndex,
@@ -137,7 +137,7 @@
 	    			'-moz-transform':'translate(-50%,-50%)',
 	    			'transform':'translate(-50%,-50%)',
 	    		}).appendTo($this);
-
+				/*
 	    		if(opt.hasLineBorder){
 	    			for(var i = 0;i < length;i++){
 		    			_this.li_selectCenterMenu = $('<li class="li-selectCenterMenu border-1px">'+opt.source[i]+'</li>').css({
@@ -154,12 +154,13 @@
 		    				'line-height':opt.liHeight+'px',
 		    			}).appendTo(_this.cpt_selectCenterMenu);
 		    		}
-	    		};
+				};
+				*/
 
 	    		defaultSelectMenu._clickMaskToClose();
-	    		defaultSelectMenu._clickEvent();
+	    		// defaultSelectMenu._clickEvent();
 	    	},
-
+			/*
 	    	defaultSelectMenu._clickEvent = function(){
 	    		_this.cpt_selectCenterMenu.find('.li-selectCenterMenu').on('click',function(event){
 					var index = $(this).index();	
@@ -190,7 +191,8 @@
 	    				'border-right':'none',
 	    			});
 				});
-	    	};
+			};
+			*/
 
 	    	defaultSelectMenu._clickMaskToClose = function(){
 				showMask({
