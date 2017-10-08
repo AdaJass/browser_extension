@@ -1,16 +1,38 @@
 var server_url = "http://localhost:3000/";
-var 
+var extensionUrl = chrome.extension.getURL('/');
+var customer_id = null;
 var barrager_color = '#fff';
 var last_barrager_time = new Date();
 
+/*------------------- message io ------------------------ */
 chrome.runtime.sendMessage({ greeting: "content say, hello" });
 chrome.runtime.onMessage.addListener(
     function (request, sender) {
-        // alert(sender.tab ?
-        //           "content receive from a content script:" + sender.tab.url :
-        //           "from the extension");
-        // alert(request.greeting)
-    });
+        operation[request.msgid](request);
+    }
+);
+function loginsucced(msg){
+    customer_id = msg.customerid;
+}
+function chat(msg){
+    if(msg.barrager){
+        return setBarrager(msg.body, 'images/heisenberg.png');        
+    }
+    else{
+        if($('chatBox').html()){
+            console.log(99999);  //insert to the chat_box
+
+        }
+        else{
+            if(msg.to.length>=2){
+                console.log(66666);  //insert or build message information
+            }
+        }
+    }    
+}
+function contactable(msg){
+    
+}
 
 //here build the channel
 /*
@@ -22,12 +44,12 @@ message={
 /*----------------------barrager------------------------------*/
 
 
-function setBarrager(info, imgurl,) {    
+function setBarrager(info, imgurl) {    
     var speed = 6;    
     var window_height = $(window).height() - 150;
     var bottom = Math.floor(Math.random() * window_height + 40);
     var item = {
-        'img': server_url+'static/images/'+imgurl,  //relativeurl+'images/' + img,
+        'img': extensionUrl+imgurl,  //relativeurl+'images/' + img,
         'info': info,        
         'close': true,
         'speed': speed,
@@ -37,7 +59,7 @@ function setBarrager(info, imgurl,) {
     };    
     $('body').barrager(item);
 }
-var example_item={'img':server_url+'static/images/heisenberg.png','info':'Heeeello world!'};
+var example_item={'img':extensionUrl+'images/heisenberg.png','info':'Heeeello world!'};
 $('body').barrager(example_item);
 
 
@@ -48,7 +70,6 @@ function clear_barrager() {
 
 /*-----------------------main dashbord---------------------------------*/
 $('<div id="main_dashbord" class="xuanfu"></div>').appendTo('body');
-$('<div id="chat_box" class="xuanfu"></div>').appendTo('body');
 $('<div id="control_box"></div.').appendTo('#main_dashbord');
 $('<div id="content_box"></div.').appendTo('#main_dashbord');  //one half show the sorted list, another show them randomly.
 var ct_box = '<button id="set_panel">设置</button>';
@@ -57,16 +78,51 @@ ct_box += '<input type="text" name="input_barrager" id="input_barrager">';
 ct_box +='<label>排序：</label><select name="sort_with"><option value="similiar">按相似度</option><option value="level">按等级</option><option value="activity">按活跃度</option><option value="score">按系统评分</option></select>';
 $('#control_box').html(ct_box);
 $('#input_barrager').attr('placeholder','按回车发送');
+
+
 $('#input_barrager').bind('keypress', function(event) {  
     if (event.keyCode == "13") {              
         event.preventDefault();   
         //回车执行查询  
         var val = $(this).val();
         if(val.length<1) return;
-        setBarrager(val,'haha.gif');  
+        setBarrager(val,'images/haha.gif');  
     }  
-});  
+}); 
 $('#clear_barrager').on('click', clear_barrager);
-/*--------------------------------------------------------------------*/
+/*-----------------------chat box---------------------------------------*/
+function showChatFrame(){
+    $('body').centermenu({
+        animateIn:'fadeInRight-hastrans',
+        animateOut:'fadeOutRight-hastrans',
+        hasLineBorder:false,
+        duration:800,
+    });  
+    $('#the_magic_box').html(html_text);
+    for(var i=1;i<=9;i++){
+        $('.wl_faces_main ul').append(
+        '<li><a href="javascript:;"><img src="'+extensionUrl+'img/emo_0'+i+'.gif" /></a></li>');
+    }
+    for(var i=10;i<=60;i++){
+        $('.wl_faces_main ul').append(
+        '<li><a href="javascript:;"><img src="'+extensionUrl+'img/emo_'+i+'.gif" /></a></li>');
+    }
+    var templist=[
+        {name:'JieSi', state:'online', url: extensionUrl+'img/head/2015.jpg', cus_id: '1'}
+        ,{name:'Ada', state: 'offline', url: extensionUrl+'img/head/2014.jpg', cus_id: '2'}
+    ];    
+    for(var i=0, l=templist.length;i<l;i++){
+        $('.chat03_content ul').append('<li>'+
+            '<label class="'+templist[i].state+'">'+
+            '</label><a href="javascript:;">'+
+            '<img src="'+templist[i].url+'"></a><a href="javascript:;"'+
+            'class="chat03_name">'+templist[i].name+'</a>'+
+            '<span hidden>'+templist[i].cus_id+'</span></li>');
+    } 
+    $('.chat02_bar ul li img').attr('src',extensionUrl+'img/send_btn.jpg');
+    Binding($);
+    BlinkBlink($);
+}
+setTimeout(showChatFrame,5000);
 
 

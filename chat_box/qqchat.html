@@ -11,29 +11,17 @@
     <link rel="stylesheet" type="text/css" href="css/chat.css" />
 
     <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+    <link rel="stylesheet" href="css/animate.css">
+	<!-- <link rel="stylesheet" href="http://www.daiwei.org/components/toast/css/toast.css">	 -->
+	<link rel="stylesheet" href="css/centermenu.css">
 
-    <script type="text/javascript" src="js/chat.js"></script>
+    <!-- <script type="text/javascript" src="js/chat.js"></script> -->
 </head>
 
-<body class="keBody">
-
-    <h1 class="keTitle">JS在线聊天对话框网页特效</h1>
-
-    <div class="kePublic">
-
-        <!--效果html开始-->
-
-        <div class="content">
-
-            
-
-        </div>
-
-        <!--效果html结束-->
-
-    </div>
+<body>    
     <button onclick="centermenu3()">click me</button>
     <script src="js/centermenu.js"></script>
+    <script type="text/javascript" src="js/chat.js"></script>
     <script>
         var html_text =
  `<div class="chatBox">            
@@ -266,16 +254,19 @@
 
 function centermenu3(){
     console.log('here')
-    $('div .content').centermenu({
+    $('body').centermenu({
         animateIn:'fadeInRight-hastrans',
         animateOut:'fadeOutRight-hastrans',
         hasLineBorder:false,
         duration:800,
     });    
     $('#the_magic_box').html(html_text);
-}                  
+    Binding($);
+    BlinkBlink($);
+}                
 
     </script>
+    
 
 </body>
 

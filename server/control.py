@@ -1,4 +1,5 @@
 from customer import *
+import mongo as db
 from datetime import datetime as dt
 import json
 
@@ -11,6 +12,10 @@ message={
 }
 """
 def login(uid, psw):
+    if db.customer.count({'_id': uid, 'psw': psw}) >= 1:
+        return True
+    else:
+        return False
     pass
 
 async def task_center(ws, message):    
@@ -32,7 +37,10 @@ async def history(ws, msg):
 
     if  msg.get('input') =='true':
         cpage = msg['body']
-        All_Customer[ws].set_history(cpage)
+        if msg.get('duration'):
+            All_Customer[ws].set_history(cpage, True)
+        else:
+            All_Customer[ws].set_history(cpage)
         
 
 async def profile(ws, msg):
@@ -68,14 +76,16 @@ async def problem():
     pass
 
 async def get_contact(ws, msg):
+    if msg.body:
+        All_Customer[ws].set_history(msg.body)
     pagecontact = All_Customer[ws].get_current_contact()
     if len(All_Customer[ws].customerid) == 36:
-        await ws.send(json.dumps({'msgid':'contactable','body':{'pagecontact':pagecontact, 'friends':{}}}))
+        await ws.send(json.dumps({'msgid':'contactable', 'tabid': msg.get('tabid'),'body':{'pagecontact':pagecontact, 'friends':{}}}))
         return
     if All_Customer[ws].basic_info is None:
         All_Customer[ws].get_basic_info()
     if type(All_Customer[ws].basic_info) is type({}) and All_Customer[ws].get('friend') is not None:
-        await ws.send(json.dumps({'msgid':'contactable','body':{'pagecontact':pagecontact, 'friends':All_Customer[ws].basic_info['friend']}}))
+        await ws.send(json.dumps({'msgid':'contactable', 'tabid': msg.get('tabid'), 'body':{'pagecontact':pagecontact, 'friends':All_Customer[ws].basic_info['friend']}}))
     
 
 operation={

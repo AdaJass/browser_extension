@@ -15,7 +15,7 @@ All_Customer = dict()  # {ws obj: customer obj}
 All_Customer_WS = dict()  #{customer id: ws obj}
 
 class Customer:
-    def __init__(self, customerid, currentpage):
+    def __init__(self, customerid, currentpage=None):
         if not customerid:
             self.customerid = str(uuid.uuid5(uuid.uuid4(),'cunstomerID'))
             self.description = None
@@ -78,14 +78,17 @@ class Customer:
             return
         db.profile.insert_one({'customerId':self.customerid, 'date': dt.today(), 'saying': ss})
     
-    def set_history(self, page=None):
-        if len(self.customerid) == 36:            
+    def set_history(self, page=None, duration=False):
+        if page != None or page != '':
+            self.currentpage = page
+        if len(self.customerid) == 36:
+            self.currentpage=page            
             return
         if page == None:
             page = self.currentpage
         parse = urlparse(page)
         val = dt.today()-td(1)
-        if db.history.count({'customerId': self.customerid, 'url': page,'date':{'$gte': val}}) >=1:
+        if db.history.count({'customerId': self.customerid, 'url': page,'date':{'$gte': val}}) >=1 and duration:
             db.history.update_many({'customerId': self.customerid, 'url': page,'date':{'$gte': val}}, {'$inc':{'duration':1}, '$set':{'renewdate':dt.today()}})
         else:
             db.history.insert_one({'customerId': self.customerid, 'date': dt.today(), 'renewdate': dt.today(), 'host': parse.hostname, 'url': page, 'duration':1})

@@ -1,9 +1,12 @@
 import asyncio
 from aiohttp import web
+import aiohttp_jinja2
+import jinja2
 import datetime
 import json
 import random
 import websockets
+import ssl
 import uuid
 from customer import *
 import control
@@ -12,13 +15,24 @@ import handler
 async def resp_data(request):
     return web.json_response({'ss':'ss'})
 
-async def init_webserver(loop):    
-    app = web.Application()
+async def init_http_server(loop):    
+    app = web.Application()    
+    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('./views'))
+    app.router.add_static('/static/', path='./static', name='static')
     app.router.add_route('GET', '/data', resp_data)
-    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('/views'))
-    app.router.add_static('/static/', path='./static', name='static')    
+    app.router.add_route('GET', '/chat_box', handler.chatbox)
     srv = await loop.create_server(app.make_handler(), '0.0.0.0', 3000)
-    print('Sever starts at port: 3000')
+    print('http sever starts at port: 3000')
+    return srv 
+
+async def init_https_server(loop):    
+    app = web.Application()    
+    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('./views'))
+    app.router.add_static('/static/', path='./static', name='static')
+    app.router.add_route('GET', '/data', resp_data)
+    app.router.add_route('GET', '/chat_box', handler.chatbox)
+    srv = await loop.create_server(app.make_handler(), '0.0.0.0', 3448, ssl=ssl.create_default_context())
+    print('https sever starts at port: 3448')
     return srv 
 
 async def wsocket(websocket, path):
@@ -43,7 +57,7 @@ async def wsocket(websocket, path):
                 # print(All_Customer)
                 # print('**********************')
                 return
-            websocket.send(json.dumps({'msgid':'error','option':{'type':'normal'}}))
+            websocket.send(json.dumps({'msgid':'error','body':'normal'}))
             continue
             pass
         if control.operation.get(message['msgid']):
@@ -51,29 +65,29 @@ async def wsocket(websocket, path):
             continue        
         # print(websocket)
         if (All_Customer.get(websocket) == None) and message['msgid']=='login':  #log in initialize
-            cus_id = message['option'].get('customId')
-            psw = message['option'].get('password')
+            cus_id = message.get('customId')
+            psw = message.get('password')
             if cus_id and not psw:
-                await websocket.send(json.dumps({'msgid':'error','option':{'type':'no password'}}))
-            if not cus_id and message['option'].get('anonymous'):
+                await websocket.send(json.dumps({'msgid':'error','body':'no password'}))
+            if not cus_id and message.get('anonymous'):
                 anon=True
                 result = False
             else:
                 result=control.login(cus_id, psw)
                 if not result:
-                    await websocket.send(json.dumps({'msgid':'error','option':{'type':'password wrong'}}))
-                    continue
-            cpg = [message['body']['currentpage']]
+                    await websocket.send(json.dumps({'msgid':'error','body':'password wrong'}))
+                    continue            
             if result or anon:
-                All_Customer[websocket] = Customer(cus_id, cpg)
+                All_Customer[websocket] = Customer(cus_id)
                 All_Customer_WS[All_Customer[websocket].customerid] = websocket
-                await websocket.send(json.dumps({'msgid':'loginsucceed','option':{'customerid':All_Customer[websocket].customerid}}))
+                await websocket.send(json.dumps({'msgid':'loginsucceed','customerid':All_Customer[websocket].customerid}))
     
 
 ws_server = websockets.serve(wsocket, 'localhost', 5678)
 loop=asyncio.get_event_loop()
-web_server = init_webserver(loop)
-tasks=[web_server, ws_server]
+http_server = init_http_server(loop)
+https_server = init_https_server(loop)
+tasks=[http_server, https_server, ws_server]
 loop.run_until_complete(asyncio.wait(tasks))
 try:
     loop.run_forever()

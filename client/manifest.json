@@ -24,7 +24,12 @@
     "matches": [
       "<all_urls>"
     ],
-    "js": ["js/jquery-2.1.1.min.js", "js/jquery.barrager.js", "js/content.js"],
-    "css":["css/barrager.css","css/content.css"]
-  }]  
+    "js": ["js/jquery-2.1.1.min.js", "js/jquery.barrager.js", "js/centermenu.js", "js/chat.js", "js/chat_box_html.js","js/content.js"],
+    "css":["css/barrager.css", "css/centermenu.css", "css/animate.css", "css/chat.css" ,"css/content.css"]
+  }],  
+  "web_accessible_resources": [
+    "images/*",    
+    "img/*",
+    "img/head/*"
+  ] 
 }

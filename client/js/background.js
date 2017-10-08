@@ -1,6 +1,7 @@
 var ws = new WebSocket("ws://127.0.0.1:5678/");
 var Contact_List={};
-var Chat_Tab = {};
+var Chat_Tab = {};   //{'chat_customer_id': tabid, ....}
+var Customer_id = None;
 
 ws.onopen = function(){
     //ws.send(JSON.stringify({'msgid':'greet', 'body':'hello'}));
@@ -8,7 +9,7 @@ ws.onopen = function(){
     /*first load the customer infomation from lacalstorage, if there isn't. Popup a login 
       dialog from contentscript.
     */
-    msg={'msgid':'login', 'option':{'anonymous': true}, 'body':{'currentpage':'www.bai.com'}};
+    msg={'msgid':'login', 'anonymous': true};
     ws.send(JSON.stringify(msg));
 };
 
@@ -22,12 +23,13 @@ var getAndSendUrl=function(){
           //console.log(tabs.length()) 
           console.log(JSON.stringify(tab))
           var url = tab.url; 
-          var data = {'msgid':'history', 'input':'true','body':url};    
+          var data = {'msgid':'history', 'input':'true','body':url, 'duration': 'true'};    
           ws.send(JSON.stringify(data));
         });
 };
-setInterval(getAndSendUrl,10000);
+setInterval(getAndSendUrl,60000);
 
+/*--------------------Event listener---------------------*/
 chrome.tabs.onUpdated.addListener(function(tabid, changeinfo){
   if(changeinfo.url){
     var data = {'msgid':'history', 'input':'true','body': changeinfo.url};    
@@ -35,54 +37,73 @@ chrome.tabs.onUpdated.addListener(function(tabid, changeinfo){
   }
 });
 
+chrome.tabs.onActivated.addListener(function(info){
+  chrome.tabs.get(info.tabId, function(tab){
+    var data = {'msgid':'contactable', 'body': tab.url, 'tabid':info.tabId};
+    ws.send(JSON.stringify(data));
+  });  
+});
 
-function _history(msg){
+/*----------------------respone to tab message.----------------*/
+chrome.runtime.onMessage.addListener(
+  function(msg, sender) {
+    if(msg.msgid == 'chat'){
+        Chat_Tab[msg.from] = sender.tab.id;
+        ws.send(JSON.stringify(msg));
+    }
+    // chrome.tabs.sendMessage(sender.tab.id, {greeting: "background say hello"});
+});
+
+/*---------------------respone to server message---------------*/
+function recHistory(msg){
 
 }
 
-function profile(msg){
+function recProfile(msg){
 
 }
 
-function customer(msg){
+function recCustomer(msg){
 
 }
 
-function description(msg){
+function recDescription(msg){
 
 }
 
-function problem(msg){
+function recProblem(msg){
 
 }
 
-function chat(msg){  
+function recChat(msg){  
   var tab = Chat_Tab[msg.to];
   chrome.tabs.sendMessage(tab, msg);
 }
 
-function get_contact(msg){
-  
+function recContactable(msg){
+  chrome.tabs.sendMessage(msg.tabid, msg);
 }
 
-
+function loginsucceed(msg){
+  Customer_id =msg.customerid;
+  chrome.runtime.sendMessage({ msgid: 'loginsucceed' , customerid: Customer_id});
+}
 
 operation={
-  'history': _history,
-  'profile': profile,
-  'customer':customer,
-  'description':description,
-  'problem':problem,
-  'chat':chat,
-  'contactable': get_contact,
+  'history': recHistory,
+  'profile': recProfile,
+  'customer':recCustomer,
+  'description':recDescription,
+  'problem':recProblem,
+  'chat': recChat,
+  'contactable': recContact,
+  'loginsucceed': loginsucceed
 };
 
 ws.onmessage = function(msg){
   var mesg = JSON.parse(msg);
   operation[mesg['msgid']](mesg) 
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////
 /*--------------------popuo.js------------------------*/
