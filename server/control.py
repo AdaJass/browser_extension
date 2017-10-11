@@ -41,6 +41,8 @@ async def history(ws, msg):
             All_Customer[ws].set_history(cpage, True)
         else:
             All_Customer[ws].set_history(cpage)
+        pagecontact = All_Customer[ws].get_current_contact()
+        await ws.send(json.dumps({'msgid':'contactable', 'tabid': msg.get('tabid'), 'pagecontact':pagecontact}))
         
 
 async def profile(ws, msg):
@@ -65,8 +67,21 @@ async def customer(ws, msg):
 
 async def chat(ws, msg):
     zero = msg.get('from')
-    one = msg.get('to')
-    await All_Customer_WS[one].send(json.dumps(msg))
+    ones = msg.get('to')
+    for one in ones:
+        await All_Customer_WS[one].send(json.dumps(msg))
+
+async def barrager(ws, msg):
+    """here is lots of things and hard things to do, like controlling
+    the barragers density.
+    """
+    All_Customer[ws].currentpage = msg.url
+    pagecontact = All_Customer[ws].get_current_contact()    
+    for one in pagecontact:
+        await All_Customer_WS[one].send(msg)
+
+
+    
 
 async def description():
     pass
@@ -79,6 +94,9 @@ async def get_contact(ws, msg):
     if msg.body:
         All_Customer[ws].set_history(msg.body)
     pagecontact = All_Customer[ws].get_current_contact()
+    if msg.get('nofriend'):
+        await ws.send(json.dumps({'msgid':'contactable', 'tabid': msg.get('tabid'), 'pagecontact':pagecontact}))
+        return
     if len(All_Customer[ws].customerid) == 36:
         await ws.send(json.dumps({'msgid':'contactable', 'tabid': msg.get('tabid'),'body':{'pagecontact':pagecontact, 'friends':{}}}))
         return
@@ -95,5 +113,6 @@ operation={
     'description':description,
     'problem':problem,
     'chat':chat,
+    'barrager': barrager,
     'contactable': get_contact,
 }

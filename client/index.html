@@ -65,6 +65,19 @@
 
     <script src="js/popup.js"></script>
     <script src="js/contact_list.js"></script>
+    <script>
+        var parser = document.createElement('a');
+        parser.href = "http://ww.example.com/pathname/?sear=test&fh=9#h3sh";
+        
+        console.log(parser.protocol); // => "http:"
+        console.log(parser.hostname); // => "example.com"
+        console.log(parser.port);     // => "3000"
+        console.log(parser.pathname); // => "/pathname/"
+        console.log(parser.search);   // => "?search=test"
+        console.log(parser.hash);     // => "#hash"
+        console.log(parser.host);     // => "example.com:3000"
+        
+    </script>
 </body>
 
 </html>

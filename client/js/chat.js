@@ -25,7 +25,9 @@ function Binding() {
             $(".chat01_content").scrollTop($(".mes" + a).height());
             $("#textarea").html("");
             message();
-            var cusid_list=$(".chat03_content li span").text();            
+            var cusid_list=$(".chat03_content li span").text();
+            if(typeof(cusid_list) != typeof([])) 
+                cusid_list = [cusid_list];
             chrome.runtime.sendMessage({ msgid: 'chat', bady: send_text, time: msgtime, from: customer_id, to: cusid_list});
         } 
         else{

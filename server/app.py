@@ -65,7 +65,7 @@ async def wsocket(websocket, path):
             continue        
         # print(websocket)
         if (All_Customer.get(websocket) == None) and message['msgid']=='login':  #log in initialize
-            cus_id = message.get('customId')
+            cus_id = message.get('customerid')
             psw = message.get('password')
             if cus_id and not psw:
                 await websocket.send(json.dumps({'msgid':'error','body':'no password'}))

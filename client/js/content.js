@@ -1,11 +1,16 @@
 var server_url = "http://localhost:3000/";
 var extensionUrl = chrome.extension.getURL('/');
 var customer_id = null;
+var friend_list = null;
+var page_contact = null;
 var barrager_color = '#fff';
 var last_barrager_time = new Date();
-
 /*------------------- message io ------------------------ */
-chrome.runtime.sendMessage({ greeting: "content say, hello" });
+function sendMsg(msg){
+    chrome.runtime.sendMessage(msg);
+}
+
+
 chrome.runtime.onMessage.addListener(
     function (request, sender) {
         operation[request.msgid](request);
@@ -14,24 +19,34 @@ chrome.runtime.onMessage.addListener(
 function loginsucced(msg){
     customer_id = msg.customerid;
 }
-function chat(msg){
-    if(msg.barrager){
-        return setBarrager(msg.body, 'images/heisenberg.png');        
+
+function chat(msg){    
+    if($('chatBox').html()){
+        console.log(99999);  //insert to the chat_box
+
     }
     else{
-        if($('chatBox').html()){
-            console.log(99999);  //insert to the chat_box
-
+        if(msg.to.length>=2){
+            console.log(66666);  //insert or build message information
         }
-        else{
-            if(msg.to.length>=2){
-                console.log(66666);  //insert or build message information
-            }
-        }
-    }    
+    }        
 }
 function contactable(msg){
-    
+    if(msg.body){
+        page_contact = msg.pagecontact;
+    }else{
+        friend_list = msg.body.friends;       
+    }
+}
+function friendlist(msg){
+    friend_list = msg.body;
+}
+function barrager(msg){
+    var parser = document.createElement('a');
+    parser.href = msg.url;    
+    if(parser.host == location.host){
+        setBarrager(msg.value, 'images/heisenberg.png');
+    }
 }
 
 //here build the channel
@@ -86,7 +101,9 @@ $('#input_barrager').bind('keypress', function(event) {
         //回车执行查询  
         var val = $(this).val();
         if(val.length<1) return;
-        setBarrager(val,'images/haha.gif');  
+        // setBarrager(val,'images/haha.gif'); 
+        var msg ={msgid: 'barrager',customerid: customer_id, value: val, url: location.href};
+        sendMsg(msg);
     }  
 }); 
 $('#clear_barrager').on('click', clear_barrager);

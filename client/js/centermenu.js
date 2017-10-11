@@ -82,8 +82,11 @@ var defaultvalue = {
     	defaultvalue._event = function(){
     		showMaskEle.on('click',function(){
                 if(opt.clickClose){
+					$(".chatBox").hide();
     				defaultvalue._showScroll(true);
-                    defaultvalue._removeMask();
+					defaultvalue._removeMask();
+					document.onkeydown = function () {};
+					
                 }
     		})
     	};

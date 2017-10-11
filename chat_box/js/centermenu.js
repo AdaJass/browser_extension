@@ -30,7 +30,8 @@
     			'animation-duration':opt.duration/1000+'s',
     		}).appendTo($('body'));
     		defaultvalue._showScroll(false);
-    		defaultvalue._event();
+			defaultvalue._event();
+			document.onkeydown = function () {};
     	};
 
     	defaultvalue._showScroll = function(isShow){
