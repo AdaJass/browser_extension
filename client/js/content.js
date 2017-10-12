@@ -5,19 +5,24 @@ var friend_list = null;
 var page_contact = null;
 var barrager_color = '#fff';
 var last_barrager_time = new Date();
+
 /*------------------- message io ------------------------ */
 function sendMsg(msg){
+    // console.log(msg);
     chrome.runtime.sendMessage(msg);
 }
 
 
 chrome.runtime.onMessage.addListener(
     function (request, sender) {
-        operation[request.msgid](request);
+        operations[request.msgid](request);
+        
     }
 );
 function loginsucced(msg){
     customer_id = msg.customerid;
+    alert(customer_id);
+    console.log(99);
 }
 
 function chat(msg){    
@@ -42,13 +47,29 @@ function friendlist(msg){
     friend_list = msg.body;
 }
 function barrager(msg){
+    // console.log(msg);
     var parser = document.createElement('a');
-    parser.href = msg.url;    
+    parser.href = msg.url; 
+    // parser.protocol; // => "http:"
+    // parser.hostname; // => "example.com"
+    // parser.port;     // => "3000"
+    // parser.pathname; // => "/pathname/"
+    // parser.search;   // => "?search=test"
+    // parser.hash;     // => "#hash"
+    // parser.host;     // => "example.com:3000"   
     if(parser.host == location.host){
         setBarrager(msg.value, 'images/heisenberg.png');
     }
 }
 
+
+var operations={
+    'barrager': barrager,
+    'friendlist': friendlist,
+    'contactable': contactable,
+    'chat': chat,
+    'loginsucceed': loginsucced
+};
 //here build the channel
 /*
 message={
@@ -57,8 +78,6 @@ message={
 */
 
 /*----------------------barrager------------------------------*/
-
-
 function setBarrager(info, imgurl) {    
     var speed = 6;    
     var window_height = $(window).height() - 150;
@@ -96,7 +115,8 @@ $('#input_barrager').attr('placeholder','按回车发送');
 
 
 $('#input_barrager').bind('keypress', function(event) {  
-    if (event.keyCode == "13") {              
+    if (event.keyCode == "13") { 
+        // console.log(9999);             
         event.preventDefault();   
         //回车执行查询  
         var val = $(this).val();

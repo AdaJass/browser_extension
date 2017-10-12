@@ -12,6 +12,7 @@ message={
 }
 """
 def login(uid, psw):
+    print('heheheh')
     if db.customer.count({'_id': uid, 'psw': psw}) >= 1:
         return True
     else:
@@ -69,16 +70,19 @@ async def chat(ws, msg):
     zero = msg.get('from')
     ones = msg.get('to')
     for one in ones:
-        await All_Customer_WS[one].send(json.dumps(msg))
+        if All_Customer_WS.get(one):
+            await All_Customer_WS[one].send(json.dumps(msg))
+        else:
+            db.chat.insert({'origin':zero, 'destination':ones, 'date': msg.get('time'), 'words':msg.get('body')})
 
 async def barrager(ws, msg):
     """here is lots of things and hard things to do, like controlling
     the barragers density.
     """
-    All_Customer[ws].currentpage = msg.url
+    All_Customer[ws].currentpage = msg.get('url')
     pagecontact = All_Customer[ws].get_current_contact()    
     for one in pagecontact:
-        await All_Customer_WS[one].send(msg)
+        await All_Customer_WS[one].send(json.dumps(msg))
 
 
     
@@ -91,8 +95,8 @@ async def problem():
     pass
 
 async def get_contact(ws, msg):
-    if msg.body:
-        All_Customer[ws].set_history(msg.body)
+    if msg.get('body'):
+        All_Customer[ws].set_history(msg['body'])
     pagecontact = All_Customer[ws].get_current_contact()
     if msg.get('nofriend'):
         await ws.send(json.dumps({'msgid':'contactable', 'tabid': msg.get('tabid'), 'pagecontact':pagecontact}))
@@ -102,7 +106,7 @@ async def get_contact(ws, msg):
         return
     if All_Customer[ws].basic_info is None:
         All_Customer[ws].get_basic_info()
-    if type(All_Customer[ws].basic_info) is type({}) and All_Customer[ws].get('friend') is not None:
+    if type(All_Customer[ws].basic_info) is type({}):
         await ws.send(json.dumps({'msgid':'contactable', 'tabid': msg.get('tabid'), 'body':{'pagecontact':pagecontact, 'friends':All_Customer[ws].basic_info['friend']}}))
     
 

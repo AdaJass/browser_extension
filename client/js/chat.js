@@ -12,7 +12,7 @@ function Binding() {
         // }
         var e = new Date,
             msgtime = "";
-        msgtime += e.getFullYear() + "-", f += e.getMonth() + 1 + "-", f += e.getDate() + "  ", f += e.getHours() + ":", f += e.getMinutes() + ":", f += e.getSeconds();
+        msgtime += e.getFullYear() + "-", msgtime += e.getMonth() + 1 + "-", msgtime += e.getDate() + "  ", msgtime += e.getHours() + ":", msgtime += e.getMinutes() + ":", msgtime += e.getSeconds();
         var send_text = $("#textarea").html();  // it shows that the e() function happend after "send" button clicked.
         // console.log('the text is ', send_text);
         // h();
@@ -25,10 +25,14 @@ function Binding() {
             $(".chat01_content").scrollTop($(".mes" + a).height());
             $("#textarea").html("");
             message();
-            var cusid_list=$(".chat03_content li span").text();
+            var cusid_list=[];
+            $(".chat03_content li span").each(function(){
+                cusid_list.push($(this).text());
+            })
+            // alert(cusid_list);
             if(typeof(cusid_list) != typeof([])) 
                 cusid_list = [cusid_list];
-            chrome.runtime.sendMessage({ msgid: 'chat', bady: send_text, time: msgtime, from: customer_id, to: cusid_list});
+            chrome.runtime.sendMessage({ msgid: 'chat', body: send_text, time: msgtime, from: customer_id, to: cusid_list});
         } 
         else{
             alert("请输入内容!")
@@ -65,10 +69,10 @@ function Binding() {
         document.getElementById("textarea").innerHTML+='<img src="'+a+'">', $("#textarea").focusEnd(), $(".wl_faces_box").hide();         
     }), $(".chat02_bar img").click(function () {
         show_message();
-    }), document.onkeydown = function (a) {
-        var b = document.all ? window.event : a;
-        return 13 == b.keyCode ? (show_message(), !1) : void 0
-    }, $.fn.setCursorPosition = function (a) {
+    }), $('div.chatBox').bind('keypress', function (a) {
+        // var b = document.all ? window.event : a;
+        return 13 == a.keyCode ? (show_message(), !1) : void 0
+    }), $.fn.setCursorPosition = function (a) {
         return 0 == this.lengh ? this : $(this).setSelection(a, a)
     }, $.fn.setSelection = function (a, b) {
         if (0 == this.lengh) return this;

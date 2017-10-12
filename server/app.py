@@ -39,6 +39,7 @@ async def wsocket(websocket, path):
     while  True:        
         try:
             message = await websocket.recv() 
+            print(websocket)
             # print(All_Customer)
             # print(All_Customer_WS)
             print('the message is: ', message)
@@ -63,7 +64,7 @@ async def wsocket(websocket, path):
         if control.operation.get(message['msgid']):
             await control.task_center(websocket, message)
             continue        
-        # print(websocket)
+        
         if (All_Customer.get(websocket) == None) and message['msgid']=='login':  #log in initialize
             cus_id = message.get('customerid')
             psw = message.get('password')

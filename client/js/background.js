@@ -1,7 +1,7 @@
 var ws = new WebSocket("ws://127.0.0.1:5678/");
 var Friends_List={};
 var Chat_Tab = {};   //{'chat_customer_id': tabid, ....}
-var Customer_id = None;
+var Customer_id = null;
 var Tab_Url_dict = {};
 
 ws.onopen = function(){
@@ -11,7 +11,7 @@ ws.onopen = function(){
       dialog from contentscript.
     */
     // msg={'msgid':'login', 'anonymous': true};
-    msg = {'msgid':'login', 'password':'test1234', 'customerid': 3};
+    msg = {'msgid':'login', 'password':'test1234', 'customerid': '3'};
     ws.send(JSON.stringify(msg));    
 };
 
@@ -25,16 +25,17 @@ var getAndSendUrl=function(){
           //console.log(tabs.length()) 
           console.log(JSON.stringify(tab))
           var url = tab.url; 
+          Tab_Url_dict[tab.id] = url;
           var data = {'msgid':'history', 'input':'true','body':url, tabid: tab.id, 'duration': 'true'};    
           ws.send(JSON.stringify(data));
         });
 };
-setInterval(getAndSendUrl,60000);
+setInterval(getAndSendUrl,30000);
 
 /*--------------------Event listener---------------------*/
 chrome.tabs.onUpdated.addListener(function(tabid, changeinfo){
+  chrome.tabs.get(tabid, function(tab){Tab_Url_dict[tabid] = tab.url;});
   if(changeinfo.url){
-    Tab_Url_dict[tabid] = changeinfo.url;
     var data = {'msgid':'history', 'input':'true','body': changeinfo.url};    
     ws.send(JSON.stringify(data));
   }
@@ -42,6 +43,7 @@ chrome.tabs.onUpdated.addListener(function(tabid, changeinfo){
 
 chrome.tabs.onActivated.addListener(function(info){
   chrome.tabs.get(info.tabId, function(tab){
+    Tab_Url_dict[tab.id] = tab.url;
     if(!Friends_List.manager){
       var data = {'msgid':'contactable', 'body': tab.url, 'tabid':info.tabId };
     }else{
@@ -58,6 +60,7 @@ chrome.tabs.onActivated.addListener(function(info){
 /*----------------------respone to tab message.----------------*/
 chrome.runtime.onMessage.addListener(
   function(msg, sender) {
+    // alert(msg);
     if(msg.msgid == 'chat'){
         Chat_Tab[msg.from] = sender.tab.id;
         ws.send(JSON.stringify(msg));
@@ -67,7 +70,8 @@ chrome.runtime.onMessage.addListener(
       chrome.tabs.sendMessage(sender.tab.id, messg);
     }
     if(msg.msgid=='barrager'){
-      ws.send(msg);
+      console.log(JSON.stringify(msg));
+      ws.send(JSON.stringify(msg));
     }
     // chrome.tabs.sendMessage(sender.tab.id, {greeting: "background say hello"});
 });
@@ -94,13 +98,22 @@ function recProblem(msg){
 }
 
 function recBarrager(msg){
-  
-  
+  var psa = document.createElement('a');
+  var psb = document.createElement('a');
+  for(var t in Tab_Url_dict){
+    psa.href = Tab_Url_dict[t];
+    psb.href = msg.url;
+    if(psa.host == psb.host&& psa.pathname == psb.pathname){
+      chrome.tabs.sendMessage(parseInt(t), msg);
+    }
+  }
+
+      
 }
 
 function recChat(msg){  
-  var tab = Chat_Tab[msg.to];
-  chrome.tabs.sendMessage(tab, msg);
+  var tabid = Chat_Tab[msg.to];
+  chrome.tabs.sendMessage(tabid, msg);
 }
 
 function recContactable(msg){
@@ -108,17 +121,18 @@ function recContactable(msg){
   chrome.tabs.sendMessage(msg.tabid, msg);
 }
 
-function loginsucceed(msg){
-  if(!Contact_List.manager){  
-    var data = {'msgid':'contactable'};    
-    ws.send(JSON.stringify(data));
-  }
+function loginsucceed(msg){  
+  alert(JSON.stringify(msg));
+  var data = {'msgid':'contactable'};    
+  ws.send(JSON.stringify(data));  
   Customer_id =msg.customerid;
-  chrome.runtime.sendMessage({ msgid: 'loginsucceed' , customerid: Customer_id});
+  for(var t in Tab_Url_dict){
+    chrome.runtime.sendMessage(parseInt(t) ,{ msgid: 'loginsucceed' , customerid: Customer_id});
+  }
 }
 
 function printerror(msg){
-  console.log(JSON.stringify(msg));
+  alert(JSON.stringify(msg));
 }
 
 operation={
@@ -129,13 +143,14 @@ operation={
   'problem':recProblem,
   'chat': recChat,
   'barrager':recBarrager,
-  'contactable': recContact,
+  'contactable': recContactable,
   'loginsucceed': loginsucceed,
   'error': printerror
 };
 
-ws.onmessage = function(msg){
-  var mesg = JSON.parse(msg);
+ws.onmessage = function(msg){ 
+  // alert(msg.data); 
+  var mesg = JSON.parse(msg.data);
   operation[mesg['msgid']](mesg) 
 }
 
