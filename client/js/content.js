@@ -1,6 +1,5 @@
 var server_url = "http://localhost:3000/";
 var extensionUrl = chrome.extension.getURL('/');
-var customer_id = null;
 var friend_list = null;
 var page_contact = null;
 var barrager_color = '#fff';
@@ -19,20 +18,18 @@ chrome.runtime.onMessage.addListener(
         
     }
 );
-function loginsucced(msg){
-    customer_id = msg.customerid;
-    alert(customer_id);
-    console.log(99);
-}
 
 function chat(msg){    
-    if($('chatBox').html()){
-        console.log(99999);  //insert to the chat_box
-
+    if($('.chatBox').html()){
+        alert(JSON.stringify(msg));  //insert to the chat_box
+        roomid = msg.roomid;
     }
     else{
         if(msg.to.length>=2){
             console.log(66666);  //insert or build message information
+        }
+        else{
+            console.log(8888);
         }
     }        
 }
@@ -48,8 +45,8 @@ function friendlist(msg){
 }
 function barrager(msg){
     // console.log(msg);
-    var parser = document.createElement('a');
-    parser.href = msg.url; 
+    // var parser = document.createElement('a');
+    // parser.href = msg.url; 
     // parser.protocol; // => "http:"
     // parser.hostname; // => "example.com"
     // parser.port;     // => "3000"
@@ -57,9 +54,9 @@ function barrager(msg){
     // parser.search;   // => "?search=test"
     // parser.hash;     // => "#hash"
     // parser.host;     // => "example.com:3000"   
-    if(parser.host == location.host){
-        setBarrager(msg.value, 'images/heisenberg.png');
-    }
+    
+    setBarrager(msg.value, 'images/heisenberg.png');
+    
 }
 
 
@@ -67,8 +64,7 @@ var operations={
     'barrager': barrager,
     'friendlist': friendlist,
     'contactable': contactable,
-    'chat': chat,
-    'loginsucceed': loginsucced
+    'chat': chat
 };
 //here build the channel
 /*
@@ -116,13 +112,13 @@ $('#input_barrager').attr('placeholder','按回车发送');
 
 $('#input_barrager').bind('keypress', function(event) {  
     if (event.keyCode == "13") { 
-        // console.log(9999);             
+        console.log(localStorage.customer_id+'hh');             
         event.preventDefault();   
         //回车执行查询  
         var val = $(this).val();
         if(val.length<1) return;
         // setBarrager(val,'images/haha.gif'); 
-        var msg ={msgid: 'barrager',customerid: customer_id, value: val, url: location.href};
+        var msg ={msgid: 'barrager', value: val, url: location.href};
         sendMsg(msg);
     }  
 }); 
@@ -145,8 +141,8 @@ function showChatFrame(){
         '<li><a href="javascript:;"><img src="'+extensionUrl+'img/emo_'+i+'.gif" /></a></li>');
     }
     var templist=[
-        {name:'JieSi', state:'online', url: extensionUrl+'img/head/2015.jpg', cus_id: '1'}
-        ,{name:'Ada', state: 'offline', url: extensionUrl+'img/head/2014.jpg', cus_id: '2'}
+        {name:'JieSi', state:'online', url: extensionUrl+'img/head/2015.jpg', cus_id: '3'}
+        ,{name:'Ada', state: 'offline', url: extensionUrl+'img/head/2014.jpg', cus_id: 'test'}
     ];    
     for(var i=0, l=templist.length;i<l;i++){
         $('.chat03_content ul').append('<li>'+

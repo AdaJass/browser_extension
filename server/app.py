@@ -84,7 +84,7 @@ async def wsocket(websocket, path):
                 await websocket.send(json.dumps({'msgid':'loginsucceed','customerid':All_Customer[websocket].customerid}))
     
 
-ws_server = websockets.serve(wsocket, 'localhost', 5678)
+ws_server = websockets.serve(wsocket, '0.0.0.0', 5678)
 loop=asyncio.get_event_loop()
 http_server = init_http_server(loop)
 https_server = init_https_server(loop)

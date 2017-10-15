@@ -51,7 +51,7 @@ class Customer:
         for f in friend:
             k=f.split('_')   ##  !!!!!! customer id and tag name can't contain '_'            
             if friends.get(k[-1]) == None:
-                friends[k[-1]]=k[0]
+                friends[k[-1]] = [k[0]]
             else:
                 friends[k[-1]].append(k[0])
         self.basic_info=cursor

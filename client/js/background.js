@@ -1,4 +1,4 @@
-var ws = new WebSocket("ws://127.0.0.1:5678/");
+var ws = new WebSocket("ws://192.168.1.53:5678/");
 var Friends_List={};
 var Chat_Tab = {};   //{'chat_customer_id': tabid, ....}
 var Customer_id = null;
@@ -11,24 +11,25 @@ ws.onopen = function(){
       dialog from contentscript.
     */
     // msg={'msgid':'login', 'anonymous': true};
-    msg = {'msgid':'login', 'password':'test1234', 'customerid': '3'};
+    var cusid = prompt("请输入id:","3");    
+    msg = {'msgid':'login', 'password':'test1234', 'customerid': cusid};
     ws.send(JSON.stringify(msg));    
 };
+var queryInfo = {
+  active: true,
+  currentWindow: true
+};  
 
-var getAndSendUrl=function(){    
-        var queryInfo = {
-          active: true,
-          currentWindow: true
-        };      
-        chrome.tabs.query(queryInfo, function(tabs) {          
-          var tab = tabs[0];
-          //console.log(tabs.length()) 
-          console.log(JSON.stringify(tab))
-          var url = tab.url; 
-          Tab_Url_dict[tab.id] = url;
-          var data = {'msgid':'history', 'input':'true','body':url, tabid: tab.id, 'duration': 'true'};    
-          ws.send(JSON.stringify(data));
-        });
+var getAndSendUrl=function(){            
+  chrome.tabs.query(queryInfo, function(tabs) {          
+    var tab = tabs[0];
+    //console.log(tabs.length()) 
+    console.log(JSON.stringify(tab))
+    var url = tab.url; 
+    Tab_Url_dict[tab.id] = url;
+    var data = {'msgid':'history', 'input':'true','body':url, tabid: tab.id, 'duration': 'true'};    
+    ws.send(JSON.stringify(data));
+  });
 };
 setInterval(getAndSendUrl,30000);
 
@@ -62,7 +63,7 @@ chrome.runtime.onMessage.addListener(
   function(msg, sender) {
     // alert(msg);
     if(msg.msgid == 'chat'){
-        Chat_Tab[msg.from] = sender.tab.id;
+        Chat_Tab[msg.roomid] = sender.tab.id;
         ws.send(JSON.stringify(msg));
     }
     if(msg.msgid == 'friendlist'){
@@ -70,6 +71,7 @@ chrome.runtime.onMessage.addListener(
       chrome.tabs.sendMessage(sender.tab.id, messg);
     }
     if(msg.msgid=='barrager'){
+      msg.customerid = Customer_id;
       console.log(JSON.stringify(msg));
       ws.send(JSON.stringify(msg));
     }
@@ -111,13 +113,21 @@ function recBarrager(msg){
       
 }
 
-function recChat(msg){  
-  var tabid = Chat_Tab[msg.to];
-  chrome.tabs.sendMessage(tabid, msg);
+function recChat(msg){ 
+  // alert(JSON.stringify(msg)); 
+  var tabid = Chat_Tab[msg.roomid];
+  if(tabid){
+    chrome.tabs.sendMessage(tabid, msg);
+  }else{
+    chrome.tabs.query(queryInfo,function(tabs){
+      var tab=tabs[0];
+      chrome.tabs.sendMessage(tab.id, msg);
+    });
+  }
 }
 
 function recContactable(msg){
-  Friends_List = msg.body.friends;
+  // Friends_List = msg.body.friends;
   chrome.tabs.sendMessage(msg.tabid, msg);
 }
 
@@ -126,9 +136,7 @@ function loginsucceed(msg){
   var data = {'msgid':'contactable'};    
   ws.send(JSON.stringify(data));  
   Customer_id =msg.customerid;
-  for(var t in Tab_Url_dict){
-    chrome.runtime.sendMessage(parseInt(t) ,{ msgid: 'loginsucceed' , customerid: Customer_id});
-  }
+  Friends_List = msg.friends;
 }
 
 function printerror(msg){
