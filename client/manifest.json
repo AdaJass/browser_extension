@@ -8,7 +8,10 @@
   "permissions": [
     "http://192.168.1.53:3000/*",
     "https://192.168.1.53:3448/*",
-    "ws://192.168.1.53:5678/*",    
+    "ws://192.168.1.53:5678/*",   
+    "http://127.0.0.1:3000/*",
+    "https://127.0.0.1:3448/*",
+    "ws://127.0.0.1:5678/*",  
     "tabs",
     "notifications",
     "storage"
@@ -26,7 +29,7 @@
     "matches": [
       "<all_urls>"
     ],
-    "js": ["js/jquery-2.1.1.min.js", "js/jquery.barrager.js", "js/centermenu.js", "js/chat.js", "js/chat_box_html.js","js/content.js"],
+    "js": ["js/jquery-2.1.1.min.js", "js/content.js", "js/jquery.barrager.js", "js/centermenu.js", "js/chat_box_html.js","js/chat.js"],
     "css":["css/barrager.css", "css/centermenu.css", "css/animate.css", "css/chat.css" ,"css/content.css"]
   }],  
   "web_accessible_resources": [

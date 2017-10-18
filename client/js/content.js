@@ -2,15 +2,12 @@ var extensionUrl = chrome.extension.getURL('/');
 var friend_list = null;
 var page_contact = null;
 var customer_id = null;
+var basic_info = null;
 var barrager_color = '#fff';
 var last_barrager_time = new Date();
 var server_url = location.protocol == 'http:'? 'http://192.168.1.53:3000/' : 'https://192.168.1.53:3448/';
 var server_static = server_url + 'static/';
 /*------------------- message io ------------------------ */
-(function (){
-    //initialization here.
-
-})();
 
 function randomStr(){
     var lower = [];
@@ -27,28 +24,35 @@ function randomStr(){
     }
     return s;   
 }
+
 function idToHeadImg(id_){return server_static + 'images/head/' + id_ +'.png';}
-
-
 
 function sendMsg(msg){
     // console.log(msg);
     chrome.runtime.sendMessage(msg);
 }
 
+//initialize
+sendMsg({msgid:'initialize'});
 
 chrome.runtime.onMessage.addListener(
     function (request, sender) {
-        operations[request.msgid](request);
-        
+        operations[request.msgid](request);        
     }
 );
+
+function initialize(msg){
+    customer_id = msg.cusid;
+    page_contact = msg.page_contact;
+    friend_list = msg.friend_list;
+    basic_info = msg.basicinfo;
+}
 
 function chat(msg){    
     if($('.chatBox').html()){
         // alert(JSON.stringify(msg));  //insert to the chat_box
         roomid = msg.roomid;
-        show_message(msg.body,true);
+        show_message(msg.body, msg.from, true);
     }
     else{
         if(msg.to.length>=2){
@@ -84,6 +88,7 @@ function barrager(msg){
 
 
 var operations={
+    'initialize': initialize,
     'barrager': barrager,
     'friendlist': friendlist,
     'contactable': contactable,
@@ -146,7 +151,8 @@ $('#input_barrager').bind('keypress', function(event) {
 }); 
 $('#clear_barrager').on('click', clear_barrager);
 /*-----------------------chat box---------------------------------------*/
-function showChatFramechat(chatto, nickname, onlinestate){
+
+function showChatFrame(chatto, nickname, onlinestate){
     $('body').centermenu({
         animateIn:'fadeInRight-hastrans',
         animateOut:'fadeOutRight-hastrans',
@@ -164,8 +170,8 @@ function showChatFramechat(chatto, nickname, onlinestate){
     }
     
     var templist=[
-        {name: nick_name, state: self_state, url: idToHeadImg(customer_id), cus_id: customer_id}
-        ,{name: nickName, state: onlinestate, url: idToHeadImg(chatto), cus_id: chatto}
+        {name: basic_info.nickName, state: 'online', url: idToHeadImg(customer_id), cus_id: customer_id}
+        ,{name: nickname, state: onlinestate, url: idToHeadImg(chatto), cus_id: chatto}
     ];    
     for(var i=0, l=templist.length;i<l;i++){
         $('.chat03_content ul').append('<li>'+

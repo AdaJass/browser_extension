@@ -12,7 +12,7 @@ message={
 }
 """
 def login(uid, psw):
-    print('heheheh')
+    # print('heheheh')
     if db.customer.count({'_id': uid, 'psw': psw}) >= 1:
         return True
     else:
@@ -59,10 +59,14 @@ async def profile(ws, msg):
 async def customer(ws, msg):
     if msg.get('output') == 'true':
         if All_Customer[ws].basic_info is not None:
-            await ws.send(json.dumps(All_Customer[ws].basic_info))
+            tem = All_Customer[ws].basic_info
+            tem['msgid'] = 'customer'
+            await ws.send(json.dumps(tem))
         else:
             All_Customer[ws].get_basic_info()
-            await ws.send(json.dumps(All_Customer[ws].basic_info))
+            tem = All_Customer[ws].basic_info
+            tem['msgid'] = 'customer'
+            await ws.send(json.dumps(tem))
     if msg.get('input') == 'true':
         All_Customer[ws].update_customer(msg['body'])
 

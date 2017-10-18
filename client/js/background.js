@@ -1,6 +1,7 @@
-var ws = new WebSocket("ws://192.168.1.53:5678/");
-var Friends_List={};
-var Page_Contact=null;
+var ws = new WebSocket("ws://127.0.0.1:5678/");
+var Friends_List = null;
+var Basic_info = null;
+var Page_Contact = null;
 var Chat_Tab = {};   //{'chat_customer_id': tabid, ....}
 var Customer_id = null;
 var Tab_Url_dict = {};
@@ -46,14 +47,14 @@ chrome.tabs.onUpdated.addListener(function(tabid, changeinfo){
 chrome.tabs.onActivated.addListener(function(info){
   chrome.tabs.get(info.tabId, function(tab){
     Tab_Url_dict[tab.id] = tab.url;
-    if(!Friends_List.manager){
+    if(!Friends_List){
       var data = {'msgid':'contactable', 'body': tab.url, 'tabid':info.tabId };
     }else{
       var data = {'msgid':'contactable', 'body': tab.url, 'tabid':info.tabId , 'nofriend':'yes'};
     }
     ws.send(JSON.stringify(data));
   }); 
-  if(Friends_List.manager){
+  if(Friends_List){
     var messg = {msgid:'friendlist', body: Friends_List}
     chrome.tabs.sendMessage(info.tabId, messg);
   }
@@ -70,9 +71,9 @@ chrome.runtime.onMessage.addListener(
     if(msg.msgid == 'friendlist'){
       var messg = {msgid:'friendlist', body: Friends_List}
       chrome.tabs.sendMessage(sender.tab.id, messg);
-    }
+    }    
     if(msg.msgid == 'initialize'){
-      var messg = {msgid:'initialize', 'cusid':Customer_id, 'friendList':Friends_List,'page_contact': Page_Contact}
+      var messg = {msgid:'initialize', 'cusid':Customer_id, 'basicinfo': Basic_info,'friend_list':Friends_List,'page_contact': Page_Contact}
       chrome.tabs.sendMessage(sender.tab.id, messg);
     }
     if(msg.msgid=='barrager'){
@@ -93,7 +94,7 @@ function recProfile(msg){
 }
 
 function recCustomer(msg){
-
+  var Basic_info = msg;
 }
 
 function recDescription(msg){
@@ -139,11 +140,10 @@ function recContactable(msg){
 }
 
 function loginsucceed(msg){  
-  // alert(JSON.stringify(msg));
-  var data = {'msgid':'contactable'};    
-  ws.send(JSON.stringify(data));  
+  // alert(JSON.stringify(msg));     
+  ws.send(JSON.stringify({'msgid':'contactable'}));  
+  ws.send(JSON.stringify({'msgid':'customer'})); 
   Customer_id =msg.customerid;
-  Friends_List = msg.friends;
 }
 
 function printerror(msg){

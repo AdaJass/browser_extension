@@ -22,12 +22,11 @@
 		var bottom = (barrage.bottom == 0) ? Math.floor(Math.random() * window_height + 40) : barrage.bottom;
 		div_barrager.css("bottom", bottom + "px");
 		div_barrager_box = $("<div class='barrage_box cl'></div>").appendTo(div_barrager);
-		if(barrage.img){
-
+		if(barrage.img){			
 			div_barrager_box.append("<a class='portrait z' href='javascript:;'></a>");
-			var img = $("<img src='' onclick='showChatFrame(" + barrage.from +','+barrage.nickName+','+barrage.state+ ");'>").appendTo(id + " .barrage_box .portrait");
+			var img = $("<img src='' >").appendTo(id + " .barrage_box .portrait");
 			img.attr('src', barrage.img);
-
+			img.on('click',function(){showChatFrame(barrage.from, barrage.nickName, barrage.state);});
 		}
 		
 		div_barrager_box.append(" <div class='z p'></div>");

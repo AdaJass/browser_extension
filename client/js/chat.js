@@ -6,14 +6,14 @@ function message() {
 }
 
 var roomid = randomStr();
-function show_message(send_text, just_show) { 
+function show_message(send_text, user_name, just_show) { 
     //e() function happend after "send" button clicked.
     // function h() {  //recursive replaces #emo_ symbols to images.
     //     -1 != send_text.indexOf("*#emo_") && (send_text = send_text.replace("*#", "<img src='img/").replace("#*", ".gif'/>"), h())
     // }
     var from_head_url = server_static + "img/head/2024.jpg",
     to_head_url = server_static + "img/head/2015.jpg",
-    user_name = "\u738b\u65ed"
+    user_name = user_name||"匿名";
     divIndex = 3;
     var e = new Date,
         msgtime = "";
