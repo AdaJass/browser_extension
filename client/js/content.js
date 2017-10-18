@@ -1,11 +1,36 @@
-var server_url = "http://localhost:3000/";
 var extensionUrl = chrome.extension.getURL('/');
 var friend_list = null;
 var page_contact = null;
+var customer_id = null;
 var barrager_color = '#fff';
 var last_barrager_time = new Date();
-
+var server_url = location.protocol == 'http:'? 'http://192.168.1.53:3000/' : 'https://192.168.1.53:3448/';
+var server_static = server_url + 'static/';
 /*------------------- message io ------------------------ */
+(function (){
+    //initialization here.
+
+})();
+
+function randomStr(){
+    var lower = [];
+    var uppper = [];
+    var number =[];
+    var op={
+        0: function(){ return String.fromCharCode(Math.floor(Math.random()*26)+97);},
+        1: function(){ return String.fromCharCode(Math.floor(Math.random()*26)+65);},
+        2: function(){ return String.fromCharCode(Math.floor(Math.random()*10)+48);}
+    };
+    var s='';
+    for(var i=0; i<15;i++){
+        s+=op[Math.floor(Math.random()*3)]();
+    }
+    return s;   
+}
+function idToHeadImg(id_){return server_static + 'images/head/' + id_ +'.png';}
+
+
+
 function sendMsg(msg){
     // console.log(msg);
     chrome.runtime.sendMessage(msg);
@@ -21,8 +46,9 @@ chrome.runtime.onMessage.addListener(
 
 function chat(msg){    
     if($('.chatBox').html()){
-        alert(JSON.stringify(msg));  //insert to the chat_box
+        // alert(JSON.stringify(msg));  //insert to the chat_box
         roomid = msg.roomid;
+        show_message(msg.body,true);
     }
     else{
         if(msg.to.length>=2){
@@ -36,8 +62,6 @@ function chat(msg){
 function contactable(msg){
     if(msg.body){
         page_contact = msg.pagecontact;
-    }else{
-        friend_list = msg.body.friends;       
     }
 }
 function friendlist(msg){
@@ -55,8 +79,7 @@ function barrager(msg){
     // parser.hash;     // => "#hash"
     // parser.host;     // => "example.com:3000"   
     
-    setBarrager(msg.value, 'images/heisenberg.png');
-    
+    setBarrager(msg, idToHeadImg(msg.from));    
 }
 
 
@@ -79,8 +102,11 @@ function setBarrager(info, imgurl) {
     var window_height = $(window).height() - 150;
     var bottom = Math.floor(Math.random() * window_height + 40);
     var item = {
-        'img': extensionUrl+imgurl,  //relativeurl+'images/' + img,
-        'info': info,        
+        'img': server_static+imgurl,  //relativeurl+'images/' + img,
+        'from': info.from,
+        'nickName': info.nickName,
+        'state': info.state,
+        'info': info.body,        
         'close': true,
         'speed': speed,
         'bottom': bottom,
@@ -89,15 +115,12 @@ function setBarrager(info, imgurl) {
     };    
     $('body').barrager(item);
 }
-var example_item={'img':extensionUrl+'images/heisenberg.png','info':'Heeeello world!'};
-$('body').barrager(example_item);
 
+// $.get(server_static+'data',function(d){alert(9);alert(JSON.stringify(d));});
 
 function clear_barrager() {
     $.fn.barrager.removeAll();
 }
-
-
 /*-----------------------main dashbord---------------------------------*/
 $('<div id="main_dashbord" class="xuanfu"></div>').appendTo('body');
 $('<div id="control_box"></div.').appendTo('#main_dashbord');
@@ -111,20 +134,19 @@ $('#input_barrager').attr('placeholder','按回车发送');
 
 
 $('#input_barrager').bind('keypress', function(event) {  
-    if (event.keyCode == "13") { 
-        console.log(localStorage.customer_id+'hh');             
+    if (event.keyCode == "13") {
         event.preventDefault();   
         //回车执行查询  
         var val = $(this).val();
         if(val.length<1) return;
         // setBarrager(val,'images/haha.gif'); 
-        var msg ={msgid: 'barrager', value: val, url: location.href};
+        var msg ={msgid: 'barrager', body: val, url: location.href, from: customer_id};
         sendMsg(msg);
     }  
 }); 
 $('#clear_barrager').on('click', clear_barrager);
 /*-----------------------chat box---------------------------------------*/
-function showChatFrame(){
+function showChatFramechat(chatto, nickname, onlinestate){
     $('body').centermenu({
         animateIn:'fadeInRight-hastrans',
         animateOut:'fadeOutRight-hastrans',
@@ -140,9 +162,10 @@ function showChatFrame(){
         $('.wl_faces_main ul').append(
         '<li><a href="javascript:;"><img src="'+extensionUrl+'img/emo_'+i+'.gif" /></a></li>');
     }
+    
     var templist=[
-        {name:'JieSi', state:'online', url: extensionUrl+'img/head/2015.jpg', cus_id: '3'}
-        ,{name:'Ada', state: 'offline', url: extensionUrl+'img/head/2014.jpg', cus_id: 'test'}
+        {name: nick_name, state: self_state, url: idToHeadImg(customer_id), cus_id: customer_id}
+        ,{name: nickName, state: onlinestate, url: idToHeadImg(chatto), cus_id: chatto}
     ];    
     for(var i=0, l=templist.length;i<l;i++){
         $('.chat03_content ul').append('<li>'+
@@ -156,6 +179,4 @@ function showChatFrame(){
     Binding($);
     BlinkBlink($);
 }
-setTimeout(showChatFrame,5000);
-
-
+// setTimeout(showChatFrame,5000);

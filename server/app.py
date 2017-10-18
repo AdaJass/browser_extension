@@ -25,13 +25,21 @@ async def init_http_server(loop):
     print('http sever starts at port: 3000')
     return srv 
 
+'''
+    ssl_cert = here.parent / 'server.crt'
+    ssl_key = here.parent / 'server.key'
+    self.ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+    self.ssl_context.load_cert_chain(str(ssl_cert), str(ssl_key))
+'''
 async def init_https_server(loop):    
     app = web.Application()    
     aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('./views'))
     app.router.add_static('/static/', path='./static', name='static')
     app.router.add_route('GET', '/data', resp_data)
     app.router.add_route('GET', '/chat_box', handler.chatbox)
-    srv = await loop.create_server(app.make_handler(), '0.0.0.0', 3448, ssl=ssl.create_default_context())
+    ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+    ssl_context.load_cert_chain('./server.crt', './server.key')
+    srv = await loop.create_server(app.make_handler(), '0.0.0.0', 3448, ssl=ssl_context)
     print('https sever starts at port: 3448')
     return srv 
 
@@ -67,7 +75,7 @@ async def wsocket(websocket, path):
         
         if (All_Customer.get(websocket) == None) and message['msgid']=='login':  #log in initialize
             cus_id = message.get('customerid')
-            psw = message.get('password')
+            psw                                                                                                                                                                                                                                        = message.get('password')
             if cus_id and not psw:
                 await websocket.send(json.dumps({'msgid':'error','body':'no password'}))
             if not cus_id and message.get('anonymous'):

@@ -25,8 +25,9 @@
 		if(barrage.img){
 
 			div_barrager_box.append("<a class='portrait z' href='javascript:;'></a>");
-			var img = $("<img src='' >").appendTo(id + " .barrage_box .portrait");
+			var img = $("<img src='' onclick='showChatFrame(" + barrage.from +','+barrage.nickName+','+barrage.state+ ");'>").appendTo(id + " .barrage_box .portrait");
 			img.attr('src', barrage.img);
+
 		}
 		
 		div_barrager_box.append(" <div class='z p'></div>");

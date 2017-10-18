@@ -5,33 +5,20 @@ function message() {
     }, 8e3)
 }
 
-function randomStr(){
-    var lower = [];
-    var uppper = [];
-    var number =[];
-    var op={
-        0: function(){ return String.fromCharCode(Math.floor(Math.random()*26)+97);},
-        1: function(){ return String.fromCharCode(Math.floor(Math.random()*26)+65);},
-        2: function(){ return String.fromCharCode(Math.floor(Math.random()*10)+48);}
-    };
-    var s='';
-    for(var i=0; i<15;i++){
-        s+=op[Math.floor(Math.random()*3)]();
-    }
-    return s;   
-}
-
 var roomid = randomStr();
-
-function show_message(send_text) { 
+function show_message(send_text, just_show) { 
     //e() function happend after "send" button clicked.
     // function h() {  //recursive replaces #emo_ symbols to images.
     //     -1 != send_text.indexOf("*#emo_") && (send_text = send_text.replace("*#", "<img src='img/").replace("#*", ".gif'/>"), h())
     // }
+    var from_head_url = server_static + "img/head/2024.jpg",
+    to_head_url = server_static + "img/head/2015.jpg",
+    user_name = "\u738b\u65ed"
+    divIndex = 3;
     var e = new Date,
         msgtime = "";
     msgtime += e.getFullYear() + "-", msgtime += e.getMonth() + 1 + "-", msgtime += e.getDate() + "  ", msgtime += e.getHours() + ":", msgtime += e.getMinutes() + ":", msgtime += e.getSeconds();
-    send_text = send_text || $("#textarea").html():;  // it shows that the e() function happend after "send" button clicked.
+    send_text = send_text || $("#textarea").html();  // it shows that the e() function happend after "send" button clicked.
     // console.log('the text is ', send_text);
     // h();
     var i = "<div class='message clearfix'><div class='user-logo'><img src='" + from_head_url +
@@ -39,15 +26,18 @@ function show_message(send_text) {
         "<div>" + send_text + "</div>" + "</div>" + "<div class='wrap-ri'>" + "<div clsss='clearfix'><span>" + msgtime +
         "</span></div>" + "</div>" + "<div style='clear:both;'></div>" + "</div>";   //this should be the message sent.
     if(null != send_text && "" != send_text){
-        $(".mes" + a).append(i);
-        $(".chat01_content").scrollTop($(".mes" + a).height());
+        $(".mes" + divIndex).append(i);
+        $(".chat01_content").scrollTop($(".mes" + divIndex).height());
         $("#textarea").html("");
         message();
         var cusid_list=[];
         $(".chat03_content li span").each(function(){
             cusid_list.push($(this).text());
         })
-        // alert(cusid_list);            
+        // alert(cusid_list); 
+        if(just_show){
+            return;
+        }           
         if(typeof(cusid_list) != typeof([])) 
             cusid_list = [cusid_list];
         chrome.runtime.sendMessage({ msgid: 'chat', 'roomid': roomid, body: send_text, time: msgtime, from: cusid_list.shift(), to: cusid_list});
@@ -58,10 +48,7 @@ function show_message(send_text) {
 }
 function Binding() {
     
-    var a = 3,
-        from_head_url = "img/head/2024.jpg",
-        to_head_url = "img/head/2015.jpg",
-        user_name = "\u738b\u65ed";
+    var a = 3;        
     $(".close_btn").click(function () {
         $(".chatBox").hide();
         document.onkeydown=function(){};        

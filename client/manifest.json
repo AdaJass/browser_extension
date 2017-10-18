@@ -7,6 +7,7 @@
 
   "permissions": [
     "http://192.168.1.53:3000/*",
+    "https://192.168.1.53:3448/*",
     "ws://192.168.1.53:5678/*",    
     "tabs",
     "notifications",
@@ -31,6 +32,8 @@
   "web_accessible_resources": [
     "images/*",    
     "img/*",
-    "img/head/*"
+    "img/head/*",
+    "http://192.168.1.53:3000/*",
+    "https://192.168.1.53:3448/*"
   ] 
 }

@@ -1,5 +1,6 @@
 var ws = new WebSocket("ws://192.168.1.53:5678/");
 var Friends_List={};
+var Page_Contact=null;
 var Chat_Tab = {};   //{'chat_customer_id': tabid, ....}
 var Customer_id = null;
 var Tab_Url_dict = {};
@@ -70,6 +71,10 @@ chrome.runtime.onMessage.addListener(
       var messg = {msgid:'friendlist', body: Friends_List}
       chrome.tabs.sendMessage(sender.tab.id, messg);
     }
+    if(msg.msgid == 'initialize'){
+      var messg = {msgid:'initialize', 'cusid':Customer_id, 'friendList':Friends_List,'page_contact': Page_Contact}
+      chrome.tabs.sendMessage(sender.tab.id, messg);
+    }
     if(msg.msgid=='barrager'){
       msg.customerid = Customer_id;
       console.log(JSON.stringify(msg));
@@ -127,12 +132,14 @@ function recChat(msg){
 }
 
 function recContactable(msg){
-  // Friends_List = msg.body.friends;
+  if(msg.body.friends)
+    Friends_List = msg.body.friends;
+  Page_Contact = msg.body.pagecontact;
   chrome.tabs.sendMessage(msg.tabid, msg);
 }
 
 function loginsucceed(msg){  
-  alert(JSON.stringify(msg));
+  // alert(JSON.stringify(msg));
   var data = {'msgid':'contactable'};    
   ws.send(JSON.stringify(data));  
   Customer_id =msg.customerid;
