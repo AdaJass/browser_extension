@@ -5,3 +5,10 @@
     width: 100%;  
     z-index: 100;  
 }  
+
+#content_box ul li{
+    margin:0;
+    display:inline;
+    padding:0;
+    float:left;
+}

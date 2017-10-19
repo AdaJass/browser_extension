@@ -6,18 +6,33 @@ function message() {
 }
 
 var roomid = randomStr();
-function show_message(send_text, user_name, just_show) { 
+function show_message(send_text, user_id, msgtime, just_show) { 
     //e() function happend after "send" button clicked.
     // function h() {  //recursive replaces #emo_ symbols to images.
     //     -1 != send_text.indexOf("*#emo_") && (send_text = send_text.replace("*#", "<img src='img/").replace("#*", ".gif'/>"), h())
     // }
-    var from_head_url = server_static + "img/head/2024.jpg",
-    to_head_url = server_static + "img/head/2015.jpg",
-    user_name = user_name||"匿名";
-    divIndex = 3;
-    var e = new Date,
+    var from_head_url = idToHeadImg(customer_id),
+    to_head_url = server_static + "default.png",
+    user_name = user_id||basic_info.nickName,
+    divIndex = 3;       
+    if(user_id){
+        to_head_url=idToHeadImg(user_id);
+        for(i in chat_room_list){
+            if(chat_room_list[i].cus_id == user_id)
+                user_name = chat_room_list[i].name;
+        }
+    } 
+    user_name = user_name ||"匿名";
+    if(!msgtime){
+        var e = new Date,
         msgtime = "";
-    msgtime += e.getFullYear() + "-", msgtime += e.getMonth() + 1 + "-", msgtime += e.getDate() + "  ", msgtime += e.getHours() + ":", msgtime += e.getMinutes() + ":", msgtime += e.getSeconds();
+        msgtime += e.getFullYear() + "-", msgtime += e.getMonth() + 1 + "-", msgtime += e.getDate() + "  ", msgtime += e.getHours() + ":", msgtime += e.getMinutes() + ":", msgtime += e.getSeconds();
+    }     
+    if(send_text)  {
+        (function imgUrlFill(){
+            send_text.indexOf('_&*&*_') != -1 && (send_text = send_text.replace('_&*&*_', extensionUrl), imgUrlFill());
+        })();
+    }    
     send_text = send_text || $("#textarea").html();  // it shows that the e() function happend after "send" button clicked.
     // console.log('the text is ', send_text);
     // h();
@@ -29,7 +44,7 @@ function show_message(send_text, user_name, just_show) {
         $(".mes" + divIndex).append(i);
         $(".chat01_content").scrollTop($(".mes" + divIndex).height());
         $("#textarea").html("");
-        message();
+        message();   //blink title.
         var cusid_list=[];
         $(".chat03_content li span").each(function(){
             cusid_list.push($(this).text());
@@ -40,12 +55,17 @@ function show_message(send_text, user_name, just_show) {
         }           
         if(typeof(cusid_list) != typeof([])) 
             cusid_list = [cusid_list];
+
+        (function imgurlTide() {  //recursive replaces #emo_ symbols to images.
+            send_text.indexOf("chrome-extension://")!=-1 && (send_text = send_text.replace(/chrome-extension:\/\/[a-z0-9A-Z]*\//,'_&*&*_'), imgurlTide())
+        })();
         chrome.runtime.sendMessage({ msgid: 'chat', 'roomid': roomid, body: send_text, time: msgtime, from: cusid_list.shift(), to: cusid_list});
     } 
     else{
         alert("请输入内容!")
     }
 }
+
 function Binding() {
     
     var a = 3;        

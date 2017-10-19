@@ -36,7 +36,8 @@ class Customer:
         page_con=[]
         for ws,obj in All_Customer.items():
             if obj.currentpage == self.currentpage:
-                page_con.append(All_Customer[ws].customerid)
+                tem = All_Customer[ws].basic_info
+                page_con.append({'id':tem['_id'], 'name': tem['nickName'], 'sex':tem['sex'], 'age': tem['age']})
         self.page_contact = page_con
         return page_con              
         pass

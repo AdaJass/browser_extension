@@ -76,9 +76,7 @@ chrome.runtime.onMessage.addListener(
       var messg = {msgid:'initialize', 'cusid':Customer_id, 'basicinfo': Basic_info,'friend_list':Friends_List,'page_contact': Page_Contact}
       chrome.tabs.sendMessage(sender.tab.id, messg);
     }
-    if(msg.msgid=='barrager'){
-      msg.customerid = Customer_id;
-      console.log(JSON.stringify(msg));
+    if(msg.msgid=='barrager'){      
       ws.send(JSON.stringify(msg));
     }
     // chrome.tabs.sendMessage(sender.tab.id, {greeting: "background say hello"});
@@ -94,7 +92,7 @@ function recProfile(msg){
 }
 
 function recCustomer(msg){
-  var Basic_info = msg;
+  Basic_info = msg;
 }
 
 function recDescription(msg){

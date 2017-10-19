@@ -57,7 +57,9 @@ async def profile(ws, msg):
     pass 
 
 async def customer(ws, msg):
-    if msg.get('output') == 'true':
+    if msg.get('input') == 'true':
+        All_Customer[ws].update_customer(msg['body'])
+    else:
         if All_Customer[ws].basic_info is not None:
             tem = All_Customer[ws].basic_info
             tem['msgid'] = 'customer'
@@ -67,8 +69,6 @@ async def customer(ws, msg):
             tem = All_Customer[ws].basic_info
             tem['msgid'] = 'customer'
             await ws.send(json.dumps(tem))
-    if msg.get('input') == 'true':
-        All_Customer[ws].update_customer(msg['body'])
 
 async def chat(ws, msg):
     zero = msg.get('from')
@@ -84,7 +84,9 @@ async def barrager(ws, msg):
     the barragers density.
     """
     All_Customer[ws].currentpage = msg.get('url')
-    pagecontact = All_Customer[ws].get_current_contact()    
+    pagecontact = All_Customer[ws].get_current_contact()  
+    msg['from'] = All_Customer[ws].customerid
+    msg['nickName'] = All_Customer[ws].basic_info.get('nickName')
     for one in pagecontact:
         await All_Customer_WS[one].send(json.dumps(msg))
 

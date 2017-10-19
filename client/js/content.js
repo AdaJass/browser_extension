@@ -1,6 +1,7 @@
 var extensionUrl = chrome.extension.getURL('/');
 var friend_list = null;
 var page_contact = null;
+var chat_room_list=null;
 var customer_id = null;
 var basic_info = null;
 var barrager_color = '#fff';
@@ -46,13 +47,17 @@ function initialize(msg){
     page_contact = msg.page_contact;
     friend_list = msg.friend_list;
     basic_info = msg.basicinfo;
+    // alert(JSON.stringify(basic_info));
+    for(i in page_contact){
+        insertPerson(page_contact[i]);
+    }
 }
 
 function chat(msg){    
     if($('.chatBox').html()){
         // alert(JSON.stringify(msg));  //insert to the chat_box
         roomid = msg.roomid;
-        show_message(msg.body, msg.from, true);
+        show_message(msg.body, msg.from, msg.time, true);
     }
     else{
         if(msg.to.length>=2){
@@ -107,7 +112,7 @@ function setBarrager(info, imgurl) {
     var window_height = $(window).height() - 150;
     var bottom = Math.floor(Math.random() * window_height + 40);
     var item = {
-        'img': server_static+imgurl,  //relativeurl+'images/' + img,
+        'img': imgurl,  //relativeurl+'images/' + img,
         'from': info.from,
         'nickName': info.nickName,
         'state': info.state,
@@ -129,7 +134,7 @@ function clear_barrager() {
 /*-----------------------main dashbord---------------------------------*/
 $('<div id="main_dashbord" class="xuanfu"></div>').appendTo('body');
 $('<div id="control_box"></div.').appendTo('#main_dashbord');
-$('<div id="content_box"></div.').appendTo('#main_dashbord');  //one half show the sorted list, another show them randomly.
+$('<div id="content_box"><ul></ul></div.').appendTo('#main_dashbord');  //one half show the sorted list, another show them randomly.
 var ct_box = '<button id="set_panel">设置</button>';
 ct_box +='<button id="clear_barrager">禁用弹幕</button>';
 ct_box += '<input type="text" name="input_barrager" id="input_barrager">';
@@ -145,7 +150,7 @@ $('#input_barrager').bind('keypress', function(event) {
         var val = $(this).val();
         if(val.length<1) return;
         // setBarrager(val,'images/haha.gif'); 
-        var msg ={msgid: 'barrager', body: val, url: location.href, from: customer_id};
+        var msg ={msgid: 'barrager', body: val, url: location.href};
         sendMsg(msg);
     }  
 }); 
@@ -169,20 +174,29 @@ function showChatFrame(chatto, nickname, onlinestate){
         '<li><a href="javascript:;"><img src="'+extensionUrl+'img/emo_'+i+'.gif" /></a></li>');
     }
     
-    var templist=[
+    chat_room_list=[
         {name: basic_info.nickName, state: 'online', url: idToHeadImg(customer_id), cus_id: customer_id}
         ,{name: nickname, state: onlinestate, url: idToHeadImg(chatto), cus_id: chatto}
-    ];    
-    for(var i=0, l=templist.length;i<l;i++){
+    ];  
+    console.log(chat_room_list);  
+    for(var i=0, l=chat_room_list.length;i<l;i++){
         $('.chat03_content ul').append('<li>'+
-            '<label class="'+templist[i].state+'">'+
+            '<label class="'+chat_room_list[i].state+'">'+
             '</label><a href="javascript:;">'+
-            '<img src="'+templist[i].url+'"></a><a href="javascript:;"'+
-            'class="chat03_name">'+templist[i].name+'</a>'+
-            '<span hidden>'+templist[i].cus_id+'</span></li>');
+            '<img src="'+chat_room_list[i].url+'"></a><a href="javascript:;"'+
+            'class="chat03_name">'+chat_room_list[i].name+'</a>'+
+            '<span hidden>'+chat_room_list[i].cus_id+'</span></li>');
     } 
     $('.chat02_bar ul li img').attr('src',extensionUrl+'img/send_btn.jpg');
     Binding($);
     BlinkBlink($);
 }
 // setTimeout(showChatFrame,5000);
+
+/*-----------------------------------page contact-----------------------------*/
+function insertPerson(person){
+    $('<li id="person__'+person+'"><a class="portrait" href="javascript:;"> </a></li>').appendTo('#content_box ul');
+    var img = $("<img src='' >").appendTo('#person__'+person.id+' a');   
+    img.attr('src', idToHeadImg(person.id));
+    img.on('click',function(){showChatFrame(person.id, person.name, 'online');});
+}
